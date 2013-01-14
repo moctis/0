@@ -1,0 +1,13 @@
+
+function fn.call(cmd, ...)
+  if (fn[cmd]) then
+   --print(cmd,...)
+   print(fn[cmd](...))
+  end
+end
+
+
+local arg={...}
+if #arg > 0 then
+ fn.call(arg[1],unpack(arg,2))
+end

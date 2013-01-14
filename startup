@@ -1,0 +1,8 @@
+print('----- #',os.getComputerID(),' : ',os.getComputerLabel()," -----")
+if shell.getRunningProgram()=="disk/startup" and os.getComputerLabel()=='' then
+ shell.run('/disk/deploy')
+end
+shell.setPath(".:/rom/programs:/bin:/program:/prog")
+shell.run('/fn/autorun')
+shell.run('/api/autorun')
+shell.run('/prog/autorun')

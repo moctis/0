@@ -1,0 +1,17 @@
+
+enQ('A')
+enQ('B')
+
+x=deQ()
+print(x)
+
+enQ('C')
+
+x=deQ()
+print(x)
+
+x=deQ()
+print(x)
+
+x=deQ()
+print(x)

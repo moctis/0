@@ -1,0 +1,53 @@
+pos={}
+pos.x=0
+pos.y=0
+pos.z=0
+pos.dir=0
+
+dirs={[0]='N',[1]='E',[2]='S',[3]='W'}
+
+function fn.open()
+end
+
+function fn.locate(timeout)
+ if timeout==nil then timeout=10 end
+ while true do
+  local x,y,z=gps.locate(timeout)
+  if x then
+   pos.x,pos.y,pos.z=x,y,z
+   return "POS "..pos.x.." "..pos.y.." "..pos.z
+  else
+   print('locating...')
+  end
+ end
+end
+
+function fn.where()
+ return "POS "..pos.x.." "..pos.y.." "..pos.z.." "..dirs[pos.dir]
+end
+
+function fn.getDir()
+ fn.locate()
+ fn.refuel(10)
+ local i,c=0,0
+ while true do
+  pos.ox,pos.oy,pos.oz=pos.x,pos.y,pos.z
+  if c>=4 and digBlocks then fn.dig() end
+  if not turtle.detect() then
+   if turtle.forward() then
+    fn.locate()
+    if pos.oz>pos.z then pos.dir=0
+    elseif pos.oz<pos.z then pos.dir=2
+    elseif pos.ox<pos.x then pos.dir=1
+    elseif pos.ox>pos.x then pos.dir=3 end
+    turtle.back()
+    fn.locate()
+    while c>=4 do c=c-4 end
+    for i=1,c do fn.left() end
+    return pos.dir
+   end
+  end
+  c=c+1
+  turtle.turnRight()
+ end
+end

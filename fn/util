@@ -1,0 +1,6 @@
+function fn.lprint(...)
+  local cx,cy = term.getCursorPos()
+  term.setCursorPos(1,cy-1)
+  term.clearLine()
+  print(...)
+end

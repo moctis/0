@@ -1,0 +1,32 @@
+local tArgs = { ... } 
+local go={}
+go.x = tonumber(tArgs[1])
+go.y = tonumber(tArgs[2])
+go.z = tonumber(tArgs[3])
+go.dir = tonumber(tArgs[4])
+
+if #tArgs ~= 4 then
+	print("Usage: goto <x> <y> <z> <dir>")
+end
+ 
+
+tur.getDir()
+repeat 
+ if go.y > pos.y then go('go','up',go.y-pos.y)
+ if go.y < pos.y then go('down',pos.y-go.y)
+ if go.x < pos.x then go('west',pos.y-go.y)
+
+
+
+   
+	moveY()
+	moveZ()
+	moveX()
+	else
+	moveZ()
+	moveX()
+	moveY()
+	end
+	getPos()
+until gox==cx and goy==cy and goz==cz
+turn(gof)

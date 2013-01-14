@@ -1,0 +1,85 @@
+function fn.digPlusRun()
+ local i=0 
+ pos.ox,pos.oy,pos.oz,pos.odir=pos.x,pos.y,pos.z,pos.dir 
+ turtle.select(2)
+ fn.refuel(60)
+ fn.digDown()
+ while fn.down() do
+  fn.lprint('dig down: '..fn.where())
+  for i=1,4 do 
+   fn.tryDig(5)
+   fn.left()
+  end 
+  fn.digDown()
+ end
+ fn.lprint('return: '..fn.where())
+ fn.goto(pos.ox,pos.oy-1,pos.oz,pos.odir)
+ fn.lprint('fill hole')
+ for i=1,4 do
+  turtle.place()
+  fn.left()
+ end
+ fn.up()
+ turtle.placeDown()
+end
+
+function fn.digPlusLoop()
+ while true do
+  fn.refuel(60)
+  fn.digPlus()
+  fn.go(0,0,-5,'N')
+ end
+end
+
+function fn.digPlusBase()
+ local x,y,z=pos.x,pos.y,pos.z
+ x=x-fn.mod(x,5)
+ y=19
+ fn.goto(x,y,z,'N')
+end
+
+function fn.mod(x,d)
+ print('mod ',x,' ',d)
+ return x % d
+end
+
+function fn.digPlusHome()
+ local h={[0]=0,[1]=3,[2]=1,[3]=4,[4]=2}
+ local x,y,z=pos.x,pos.y,pos.z
+ z=fn.mod(z,5)
+ x=x-fn.mod(x,5)+h[z]
+ y=19
+ fn.lprint(x,' ',y,' ',pos.z,' E')
+ fn.goto(x,y,pos.z,'E')
+end
+
+function fn.digPlusNext()
+ local x,y,z=pos.x,pos.y,pos.z
+ x=x-fn.mod(x,5)+5
+ y=19
+ fn.goto(x,y,z,'N')
+end
+
+local digPlusState="home"
+
+function fn.digPlus(s)
+ if s==nill then digPlusState="run" end
+ while true do
+  if digPlusState=='base' then
+   fn.digPlusBase()
+   digPlusState="home"
+  elseif digPlusState=='home' then
+   fn.digPlusHome()
+   digPlusState="dig"
+  elseif digPlusState=='run' then
+   fn.digPlusRun()
+   digPlusState="next"
+  elseif digPlusState=="next" then
+   fn.digPlusNext()
+   digPlusState="base"
+  elseif digPlusState=="loop" then
+   digPlusState="base"
+  end
+  if s~='loop' then return end
+ end
+end

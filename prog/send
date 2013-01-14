@@ -1,0 +1,5 @@
+local args={...}
+net.open()
+local id=tonumber(args[1])
+local cmd=lib.join(args,2)
+net.send(id, cmd)

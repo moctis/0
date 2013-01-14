@@ -1,0 +1,12 @@
+fn.init()
+while true do
+ fn.lprint("waiting...")
+ local i,m,d=fn.recv()
+ print(i,m,d)
+ if m then 
+  print(i,"<",m)
+  SID=i
+  local t=lib.split(m)
+  shell.run(t[0], unpack(t,1))
+ end
+end

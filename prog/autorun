@@ -1,0 +1,2 @@
+local t=lib.split(os.getComputerLabel())
+shell.run(t[0], unpack(t,1))

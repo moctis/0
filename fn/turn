@@ -1,0 +1,36 @@
+function fn.left()
+ turtle.turnLeft()
+ pos.dir=pos.dir-1
+ if pos.dir==-1 then pos.dir=3 end
+end
+
+function fn.right()
+ turtle.turnRight()
+ pos.dir=pos.dir+1
+ if pos.dir==4 then pos.dir=0 end
+end
+
+function fn.todir(idir)
+ local i,_dir
+ if idir==nil then idir=pos.dir end
+ for i,_dir in pairs(dirs) do 
+  if _dir==idir then idir=i end 
+ end
+ return tonumber(idir) 
+end
+
+function fn.turn(idir)
+ idir=fn.todir(idir) 
+ local _dir,c=pos.dir,0
+ while _dir~= idir do 
+  c=c+1
+  _dir=_dir+1
+  if _dir==4 then _dir=0 end  
+ end
+ while pos.dir ~= idir do
+  if c==3 then fn.left() else fn.right() end
+ end 
+end
+
+fn.lt = fn.left
+fn.rt = fn.right

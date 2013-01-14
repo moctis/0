@@ -1,0 +1,8 @@
+os.loadAPI('/api/lib')
+os.loadAPI('/api/net')
+net.open()
+
+if turtle then 
+ os.loadAPI('/api/tur') 
+ tur.init()
+end

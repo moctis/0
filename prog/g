@@ -1,0 +1,57 @@
+cmdlst = {f=tryForwards,b=tryBack,u=rctfncs.dup,d=rctfncs.ddn,l=turtle.turnLeft,r=turtle.turnRight,t= rctfncs.tnl,
+p=turtle.place,P=turtle.placeUp,o=turtle.placeDown,
+x=turtle.drop,X=turtle.dropUp,z=turtle.dropDown,
+e=turtle.dig,E=turtle.digUp,w=turtle.digDown,
+v=rctfncs.pckup,V=turtle.suckUp,c=turtle.suckDown,
+R=rctfncs.refuel,S=rctfncs.slct,B=rctfncs.bmb,
+}
+-- non-nil array length
+function lngth(lst)
+if lst then return #lst else return 0 end
+end
+
+function gtNmbr(strg)
+_,_,nmbr,rmndr = string.find(strg,"^(%d+)(.*)$")
+return nmbr,lngth(strg)-lngth(rmndr)
+end
+
+function gtLoop(strg)
+_,_,loop,rmndr = string.find(strg,"^(%b[])(.*)$")
+if loop then return loop:sub(2,-2),lngth(strg)-lngth(rmndr)
+else return nil,0 end
+end
+
+function gox(cmnds)
+if not #cmnds then return false end
+local ndx,prvCmnd,result = 1,""
+while ndx <= #cmnds do
+  local char = cmnds:sub(ndx,ndx)
+  local nxtCh = cmnds:sub(ndx+1, ndx+1)
+  if cmdlst[char] then
+   ndx,result = ndx+1,cmdlst[char]()
+  else
+   local nmbr, nLen = gtNmbr(cmnds:sub(ndx))
+   local loop, lpLen = gtLoop(cmnds:sub(ndx))
+   if nmbr then
+        for i = 2,tonumber(nmbr) do gox(prvCmnd) end
+        ndx = ndx+nLen
+   elseif loop then
+        local nmbr, nLen = gtNmbr(cmnds:sub(ndx+lpLen))
+        if nmbr then
+         for i = 1,tonumber(nmbr) do gox(loop) end ed
+         ndx = ndx+nLen
+        else while gox(loop) do end end
+        ndx = ndx+lpLen
+  end end
+  prvCmnd = char
+end
+return result
+end
+print([[enter a string of commands/loops
+f b u d l r to move, t to tunnel
+p P o to place[U/Dn], x X z to drop
+e E w to dig [U/Dn], v V c to suck
+R to refuel, S to select next slot
+[...] loop while last command succeeds
+number for fixed loop]])
+gox(io.read())

@@ -1,0 +1,36 @@
+function fn.goto(x,y,z,dir)
+ x=tonumber(x)
+ y=tonumber(y)
+ z=tonumber(z)
+ dir=fn.todir(dir)
+ print("POS "..x.." "..y.." "..z.." "..dirs[dir])
+ local i,c=0,0
+ while pos.x~=x or pos.y~=y or pos.z~=z do
+  fn.move(pos.y-y, nill, fn.tryDown)
+  fn.move(y-pos.y, nill, fn.tryUp)
+  fn.move(pos.z-z, 'N') 
+  fn.move(x-pos.x, 'E')
+  fn.move(z-pos.z, 'S')
+  fn.move(pos.x-x, 'W')
+ end
+ fn.turn(dir)
+end
+
+function fn.go(x,y,z,dir)
+ x=tonumber(x)+pos.x
+ y=tonumber(y)+pos.y
+ z=tonumber(z)+pos.z
+ fn.goto(x,y,z,dir)
+end
+
+function fn.move(count, dir, act)
+ local i,c=0,0
+ count=tonumber(count)
+ if act==nil then act=fn.tryForward end
+ if count>0 then
+  fn.turn(dir)
+  while count>0 do
+   if act() then count=count-1 end
+  end
+ end
+end

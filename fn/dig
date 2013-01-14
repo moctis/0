@@ -1,0 +1,62 @@
+digBlocks=true
+
+function fn.digable(v)
+ if v~=nil then
+  digBlocks = (v=='true')
+ end
+ return digBlocks
+end
+
+function fn.dig()
+ if digBlocks then
+  return turtle.dig()
+ else
+  return false
+ end
+end
+
+function fn.digDown()
+ if digBlocks then
+  return turtle.digDown()
+ else
+  return false
+ end
+end
+
+function fn.digUp()
+ if digBlocks then
+  return turtle.digUp()
+ else
+  return false
+ end
+end
+
+function fn.try(detect,act,done, n)
+ local c=0
+ n=tonumber(n)
+ while detect() and c~=n do
+  if act() then
+   sleep(0.5)
+  else
+   sleep(1)
+   c=c+1
+  end
+ end
+ done()
+ return c~=n
+end
+ 
+function fn.tryDig(n)
+ return fn.try(turtle.detect, fn.dig, fn.none, n)
+end
+
+function fn.tryDigUp(n)
+ return fn.try(turtle.detectUp, fn.digUp, fn.none, n)
+end
+
+function fn.tryDigDown(n)
+ return fn.try(turtle.detectDown, fn.digDown, fn.none, n)
+end
+
+function fn.none()
+end

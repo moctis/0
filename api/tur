@@ -1,0 +1,138 @@
+function init()
+ pos=nill
+end
+
+function turnOn()
+  for _,s in pairs(redstone.getSides()) do
+   local t=peripheral.wrap(s)
+   if t then if t.turnOn then t.turnOn() end end
+  end
+end
+
+function empty()
+end
+function yes()
+ return true
+end
+function no()
+ return false
+end
+
+function tryDigUp()
+ try(turtle.digUp, turtle.detectUp, empty, 1)
+end
+
+function select(i)
+ turtle.select(i)
+ return tur
+end
+
+function placeUp(i)
+ return turtle.placeUp()
+end
+
+
+function try(act,detect,move,count)
+ local i
+ for i=1,count do
+  repeat act()
+   sleep(0.5)
+  until not detect()
+  move()
+ end
+ return tur
+end
+
+function fuel(t)
+ local i=1
+ while turtle.getFuelLevel() < t do
+  turtle.select(i)
+  turtle.refuel(i)
+  i=i+1
+  if i>16 then 
+   i=1 
+   print('no fuel!!')
+   sleep(5)
+  end
+ end
+end
+
+function digable(v)
+ if v then _digable=v end
+ return _digable
+end
+
+function tryMove()
+  getPos()
+  local c=0
+  fuel(2)
+  while not turtle.forward() do 
+   turtle.turnRight() 
+   c=c+1
+   if c>4 and digable() then turtle.dig() end
+  end
+  getPos()
+  turtle.back()
+end
+
+
+function checkDir()
+  tryMove()
+  if oz > cz then pos.dir = 0
+  elseif oz < cz then pos.dir = 2
+  elseif ox < cx then pos.dir = 1
+  elseif ox > cx then pos.dir = 3 
+  else pos.dir=-1 end
+  return pos.dir
+end
+ 
+
+function dir(d)
+ if d then
+  local i,c=0,0
+  if pos.dir==nill then checkDir() end
+  while pos.dir ~= d do
+    pos.dir = pos.dir + 1
+    c=c+1
+    if pos.dir == 4 then pos.dir = 0 end
+  end
+  if c==3 then turnLeft()  
+  else for i=1,c do turtle.turnRight() end
+  end
+ end
+ return pos.dir
+end
+ 
+function getPos()
+ oldPos=pos
+ repeat
+  pos.x, pos.y, pos.z = gps.locate(10)
+  pos.t = os.clock()
+  if pos.x==nill then print('locating...') end
+ until pos.x ~= nill
+ return pos
+end
+
+function turn(d)
+end
+
+function printPos()
+ local d={'@','N','E','S','W'}
+ print("pos "..cx.." "..cy.." "..cz.." "..d[pos.dir+2])
+end
+
+function north()
+ turn(0)
+end
+
+function east()
+ turn(1)
+end
+
+function south()
+ turn(2)
+end
+
+function west()
+ turn(3)
+end

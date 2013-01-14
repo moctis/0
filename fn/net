@@ -1,0 +1,37 @@
+function fn.open()
+ for _,s in pairs(redstone.getSides()) do
+  rednet.open(s)
+ end
+end
+
+function fn.close()
+ for _,s in pairs(redstone.getSides()) do
+  rednet.close(s)
+ end
+end
+
+function fn.recv(t)
+ local i,m,d = rednet.receive(t)
+ if i then 
+  if m~='PING' then print(i.."> " .. m) end
+ end
+ return i,m,d
+end
+
+function fn.broadcast(o)
+ print("<<"..o)
+ rednet.broadcast(o)
+end
+
+function fn.send(id, o)
+  print("< "..o)
+  rednet.send(id, o)
+end
+
+function fn.init()
+ fn.open()
+ fn.locate()
+ fn.lprint(fn.where())
+ fn.getDir()
+ fn.lprint(fn.where())
+end

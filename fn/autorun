@@ -1,0 +1,37 @@
+local d="/fn"
+local arg={...}
+
+if #arg == 1 then d="/disk/fn" end
+local l=fs.list(d)
+fn={}
+
+for _,f in ipairs(l) do
+ if not(f=='autorun') then
+--print(d..'/'..f)
+  shell.run('/'..d..'/'..f)
+ end
+end
+
+function injectRun(cmd, ...)
+ -- local s = shell.resolveProgram(cmd)
+ -- if s==nil then
+ local p={...}
+ for i=1,#p do p[i]=tonumber(p[i]) end
+ if fn[cmd] then
+  shell_run('/fn/call', cmd, ...)
+  return 0
+ end
+ if turtle ~= nil then
+  if turtle[cmd] then
+   print(turtle[cmd](unpack(p)))
+   return 0
+  end
+ end
+ shell_run(cmd, ...)
+end
+
+if shell_run==nil then
+ shell_run=shell.run
+end
+
+shell.run=injectRun

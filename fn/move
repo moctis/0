@@ -1,0 +1,63 @@
+function fn.refuel(l)
+ local no=1
+ l=tonumber(l)
+ if l==nil then l=16 end
+ while turtle.getFuelLevel() <= l do
+  turtle.select(no)
+  if not turtle.refuel(1) then no=no+1 end
+  if no>16 then 
+   no=1 
+   print('refueling...')
+  end
+ end
+ return turtle.getFuelLevel()
+end
+
+function fn.forward()
+ local ok=turtle.forward()
+ if ok then
+  if pos.dir==0 then pos.z=pos.z-1 end
+  if pos.dir==1 then pos.x=pos.x+1 end
+  if pos.dir==2 then pos.z=pos.z+1 end
+  if pos.dir==3 then pos.x=pos.x-1 end
+ end
+ return ok
+end
+
+function fn.back()
+ local ok = turtle.back()
+ if ok then
+  if pos.dir==0 then pos.z=pos.z+1 end
+  if pos.dir==1 then pos.x=pos.x-1 end
+  if pos.dir==2 then pos.z=pos.z-1 end
+  if pos.dir==3 then pos.x=pos.x+1 end
+ end
+ return ok
+end
+
+function fn.down()
+ local ok=turtle.down()
+ if ok then pos.y=pos.y-1 end
+ return ok
+end
+
+function fn.up()
+ local ok=turtle.up()
+ if ok then pos.y=pos.y+1 end
+ return ok
+end
+
+function fn.tryForward(n)
+ return fn.try(turtle.detect, fn.dig, fn.forward, n)
+end
+
+function fn.tryDown(n)
+ return fn.try(turtle.detectDown, fn.digDown, fn.down, n)
+end
+
+function fn.tryUp(n)
+ return fn.try(turtle.detectUp, fn.digUp, fn.up, n)
+end
+
+fn.fd=fn.forward
+fn.bk=fn.back
