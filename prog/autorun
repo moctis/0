@@ -1,2 +1,3 @@
 local t=lib.split(os.getComputerLabel())
-shell.run(t[0], unpack(t,1))
+if #t==1 then shell.run(t[1]) end
+if #t>1 then shell.run(t[1], unpack(t,2)) end

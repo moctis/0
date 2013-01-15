@@ -1,3 +1,5 @@
+echo_recv = true
+
 function fn.open()
  for _,s in pairs(redstone.getSides()) do
   rednet.open(s)
@@ -13,23 +15,24 @@ end
 function fn.recv(t)
  local i,m,d = rednet.receive(t)
  if i then 
-  if m~='PING' then print(i.."> " .. m) end
+  if m~='PING' and echo_recv then print(i.."> " .. m) end
  end
  return i,m,d
 end
 
 function fn.broadcast(o)
- print("<<"..o)
+ if echo_recv then print("<<"..o) end
  rednet.broadcast(o)
 end
 
 function fn.send(id, o)
-  print("< "..o)
+  if echo_recv then print("< "..o) end
   rednet.send(id, o)
 end
 
 function fn.init()
  fn.open()
+ sleep(2)
  fn.locate()
  fn.lprint(fn.where())
  fn.getDir()

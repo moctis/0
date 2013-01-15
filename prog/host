@@ -1,16 +1,2 @@
-net.open()
-for i=1,4 do
- turtle.select(i)
- turtle.place()
- sleep(1)
- local t=peripheral.wrap('front')
- t.turnOn()
- sleep(1)
-
- turtle.select(16)
- turtle.drop(5)
- local id = t.getID()
- net.send(id,'refuel')
- sleep(2)
- net.send(id,'try fd '..(4-i))
-end
+fn.init()
+fn.digRegister()

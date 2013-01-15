@@ -1,15 +1,16 @@
 function split(data) 
 	local t={} 
-	local i=0
+	local i=1
 	for x in string.gmatch(data,'[^%s]+') do
 	 t[i]=x
 	 i=i+1
 	end
 	return t
 end
+
 function join(t,s)
  local msg=''
- if s==nill then s=1 end
+ if s==nil then s=1 end
  for i=s,#t do
   msg=msg..t[i]..' '
  end
@@ -27,8 +28,8 @@ end
 function parse(data) 
 	local t={} 
 	for x in string.gmatch(data,'[^%s]+') do
-	 if t.fn==nill then t.fn=x
-	 elseif t.args==nill then t.args=x 
+	 if t.fn==nil then t.fn=x
+	 elseif t.args==nil then t.args=x 
 	 else t.args=t.args..' '..x  end
 	end
 	return t

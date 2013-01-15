@@ -2,21 +2,21 @@ local t=lib.split(os.getComputerLabel())
 fn.open()
 local i=0
 while true do
- if #t==0 then
+ if #t==1 then
   local x,y,z = gps.locate(10)
-  if x~=nill then
+  if x~=nil then
    os.setComputerLabel('gpsx host '..x..' '..y..' '..z)
    os.reboot()
   end
  else
   local x,y,z = gps.locate(10)
-  if x~=nill then
-   if x~=tonumber(t[2]) or y~=tonumber(t[3]) or z~=tonumber(t[4]) then
+  if x~=nil then
+   if x~=tonumber(t[3]) or y~=tonumber(t[4]) or z~=tonumber(t[5]) then
     os.setComputerLabel('gpsx host '..x..' '..y..' '..z)
     os.reboot()
    end
   end
-  shell.run('gps', unpack(t,1))
+  shell.run('gps', unpack(t,2))
  end
  sleep(10)
 end

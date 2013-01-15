@@ -23,7 +23,7 @@ function injectRun(cmd, ...)
  end
  if turtle ~= nil then
   if turtle[cmd] then
-   print(turtle[cmd](unpack(p)))
+   print(turtle[cmd](unpack(p,1)))
    return 0
   end
  end

@@ -1,5 +1,4 @@
 local args={...}
-net.open() 
 if #args==1 then
  net.send(tonumber(args[1]), os.getComputerLabel())
 else

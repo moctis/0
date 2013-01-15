@@ -1,0 +1,93 @@
+maxDrone = 0 
+
+function fn.digSend(cmd)
+ local ans={}
+ local count=0
+ if cmd == nil then return end
+ fn.broadcast(cmd)
+ fn.lprint(cmd.."  "..count.."/"..maxDrone)
+ while true do
+  local i,m,d=fn.recv(2)
+  if i==nil then break end
+  count=count+1
+  fn.lprint(cmd.."  "..count.."/"..maxDrone)
+  ans['com'..i]=m
+ end
+ return ans
+end
+fn.all = fn.digSend
+
+function fn.digHello(id) 
+ fn.send(tonumber(id),"IAm "..os.getComputerID())
+end
+
+function fn.digRegister()
+ local ans = fn.digSend('digHello '..os.getComputerID())
+ local k,v
+ maxDrone = 0
+ for k,v in pairs(ans) do
+  maxDrone = maxDrone +1
+ end
+ print('register count = ', maxDrone)
+end
+
+
+function fn.digWait()
+ local k,v,c,tmp=0,0,0,echo_recv
+ echo_recv = false
+ while true do
+  sleep(5)
+  local ans = fn.digSend('digHello '..os.getComputerID())
+  c = 0
+  for k,v in pairs(ans) do
+   c = c+1
+  end
+  if c == maxDrone then
+   echo_recv = tmp
+   return
+  end  
+ end
+end
+
+function fn.digBase()
+ fn.digSend('digPlusBase')
+ fn.digWait()
+end
+
+function fn.digHome()
+ fn.digSend('digPlusHome')
+ fn.digWait()
+end
+
+function fn.digRun()
+ fn.digSend('digPlusRun')
+ fn.digWait()
+end
+
+function fn.digNext()
+ fn.digSend('digPlusNext')
+ fn.go(5,0,0,'N')
+ fn.digWait()
+end
+
+function fn.digDrop()
+ fn.turn('N')
+ fn.tryForward()
+ fn.digUp()
+ fn.back()
+ turtle.select(2)
+ turtle.place()
+ fn.digSend('digPlusDrop')
+ fn.digPlusDrop(4)
+ fn.digWait()
+end
+
+function fn.digs()
+ while true do
+ fn.digBase()
+ fn.digHome()
+ fn.digRun()
+ fn.digNext()
+ fn.digDrop()
+ end
+end

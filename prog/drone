@@ -7,6 +7,10 @@ while true do
   print(i,"<",m)
   SID=i
   local t=lib.split(m)
-  shell.run(t[0], unpack(t,1))
+  if t[1] ~= nil and #t==1 then   
+   shell.run(t[1])
+  elseif t[1] ~= nil and #t>=1 then   
+   shell.run(t[1],unpack(t,2))
+  end
  end
 end

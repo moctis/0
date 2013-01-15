@@ -1,5 +1,5 @@
 function init()
- pos=nill
+ pos=nil
 end
 
 function turnOn()
@@ -90,7 +90,7 @@ end
 function dir(d)
  if d then
   local i,c=0,0
-  if pos.dir==nill then checkDir() end
+  if pos.dir==nil then checkDir() end
   while pos.dir ~= d do
     pos.dir = pos.dir + 1
     c=c+1
@@ -108,8 +108,8 @@ function getPos()
  repeat
   pos.x, pos.y, pos.z = gps.locate(10)
   pos.t = os.clock()
-  if pos.x==nill then print('locating...') end
- until pos.x ~= nill
+  if pos.x==nil then print('locating...') end
+ until pos.x ~= nil
  return pos
 end
 

@@ -1,13 +1,18 @@
+digWay = true
+
 function fn.goto(x,y,z,dir)
  x=tonumber(x)
  y=tonumber(y)
  z=tonumber(z)
  dir=fn.todir(dir)
  print("POS "..x.." "..y.." "..z.." "..dirs[dir])
- local i,c=0,0
+ local i,c,tmp=0,0,false
  while pos.x~=x or pos.y~=y or pos.z~=z do
-  fn.move(pos.y-y, nill, fn.tryDown)
-  fn.move(y-pos.y, nill, fn.tryUp)
+  tmp=digWay
+  digWay=false
+  fn.move(pos.y-y, nil, fn.tryDown)
+  fn.move(y-pos.y, nil, fn.tryUp)
+  digWay=tmp
   fn.move(pos.z-z, 'N') 
   fn.move(x-pos.x, 'E')
   fn.move(z-pos.z, 'S')
@@ -23,6 +28,28 @@ function fn.go(x,y,z,dir)
  fn.goto(x,y,z,dir)
 end
 
+function fn.digWay(val)
+ local c=0
+ if val ~= nil then
+  if val=='true' then digWay=true end
+  if val=='false' then digWay=false end
+  return
+ end
+ if not digWay then return end
+
+ fn.digUp()
+ if not turtle.detectDown() then
+  for i=2,16 do 
+   c=turtle.getItemCount(i)
+   if i==2 then c=c-1 end
+   if c>0 then
+    turtle.select(i)
+    if turtle.placeDown() then break end
+   end
+  end
+ end
+end
+
 function fn.move(count, dir, act)
  local i,c=0,0
  count=tonumber(count)
@@ -31,6 +58,7 @@ function fn.move(count, dir, act)
   fn.turn(dir)
   while count>0 do
    if act() then count=count-1 end
+   fn.digWay()
   end
  end
 end
