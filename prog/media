@@ -1,0 +1,102 @@
+function os.pullEvent()
+local event, p1, p2, p3, p4, p5 = os.pullEventRaw()
+if event == "rednet_message" then
+received(p1, p2)
+else
+return event, p1, p2, p3, p4, p5
+end
+end
+
+function download(origin, filename)
+if fs.exists("/server/" .. filename) then
+f = io.open("/server/" .. filename, "r")
+file = f:read("*a")
+rednet.send(origin, file)
+f:close()
+print ("Command completed!")
+else
+print ("Command failed!")
+rednet.send(origin, "error")
+end
+end
+
+function upload(origin, name, content)
+f = io.open("/server/" .. name, "w")
+f:write(content)
+f:close()
+rednet.send(origin, "ok")
+print("Command completed!")
+end
+
+function list(origin)
+alist = fs.list("/server")
+a = alist[1]
+b = 1
+while a ~= nil do
+rednet.send(origin, a)
+b = b+1
+a = alist[b]
+end
+rednet.send(origin, "*eof")
+print ("Command completed!")
+end
+
+function delete(origin, name)
+if fs.exists("/server/" .. name) then
+shell.run("rm", "/server/" .. name)
+rednet.send(origin, "ok")
+print("Command completed!")
+else
+rednet.send(origin, "error")
+print("Command failed!")
+end
+end
+
+function rename(origin, old, new)
+if fs.exists("/server/" .. old) then
+shell.run("rename", "/server/" .. old, "/server/" .. new)
+rednet.send(origin, "ok")
+print("Command completed!")
+else
+print("Command failed!")
+rednet.send(origin, "error")
+end
+end
+
+function received(origin, rawdata)
+print ("Request from " .. origin)
+loc = string.find(rawdata, "|")
+rawprot = string.sub(rawdata, 1, loc)
+prot = string.gsub(rawprot, "|", "", 1)
+message = string.gsub(rawdata, prot .. "|", "", 1)
+if prot == (pass .. "download") then
+ print ("Command: download " .. message)
+ download(origin, message)
+elseif prot == (pass .. "upload") then
+ uloc = string.find(message, "|")
+ rawname = string.sub(message, 1, uloc)
+ name = string.gsub(rawname, "|", "", 1)
+ content = string.gsub(message, name .. "|", "", 1)
+ print ("Command: upload " .. name)
+ upload(origin, name, content)
+elseif prot == (pass .. "list") then
+ print ("Command: list")
+ list(origin)
+elseif prot == (pass .. "rename") then
+ rloc = string.find(message, "|")
+ rawold = string.sub(message, 1, rloc)
+ old = string.gsub(rawold, "|", "", 1)
+ new = string.gsub(message, name .. "|", "", 1)
+ print ("Command: rename " .. old .. " " .. new)
+ rename(origin, old, new)
+elseif prot == (pass .. "delete") then
+ delete(origin, message)
+ print("Command: delete " .. message)
+else
+ print "Traffic!"
+end
+end
+
+pass = "aa"
+rednet.open("right")
+print ("Server is running")

@@ -1,0 +1,134 @@
+function download(file)  
+ name = file
+ rednet.send(server, pass .. "download|" .. file)
+ o, rfile = rednet.receive(2)
+ if o == nil then error("Server timed out!")
+ elseif rfile == "error" then
+  print("File could not be found!")  
+ else
+  f = io.open("/x/" .. name, "w")
+  f:write(rfile)
+  print "File downloaded!"
+  f:close()  
+ end
+end
+
+function upload()
+print("Upload a file")
+write("File to upload: ")
+file = read()
+write("Upload as? ")
+name = read()
+if fs.exists("/" .. file) then
+f = io.open("/" .. file, "r")
+content = f:read("*a")
+f:close()
+rendet.send(server, pass .. "upload|" .. name .. "|" .. content)
+o, a = rednet.receive(2)
+if a == "ok" then
+print("File uploaded!")
+sleep(3)
+main()
+else error("Server timed out!")
+end
+else
+print("File could not be found!")
+sleep(3)
+main()
+end
+end
+
+function rename()
+print("Rename a file")
+write("Current name: ")
+old = read()
+write("New name: ")
+new = read()
+rednet.send(server, pass .. "rename|" .. old .. "|" .. new)
+o, a = rednet.receive(2)
+if a == "ok" then
+print ("File renamed!")
+sleep(3)
+main()
+elseif a == "error" then
+print("File does not exist!")
+sleep(3)
+main()
+else
+error("Server timed out!")
+end
+end
+
+function delete()
+print ("Delete a file")
+write ("Delete what? ")
+name = read()
+rednet.send(server, pass .. "delete|" .. name)
+o, m = rednet.receive(2)
+if o == nil then
+error("Server timed out!")
+elseif m == "ok" then
+print("File deleted!")
+sleep(3)
+main()
+else
+print("File does not exist!")
+sleep(3)
+main()
+end
+end
+
+function downloadAll(r)
+ local ii,ff
+ for ii,ff in ipairs(r) do
+  print('[',ii,'] ',ff)
+  download(ff)
+ end
+ main()
+end
+
+function main()
+term.clear()
+term.setCursorPos(1,1)
+rednet.send(server, pass ..  "list|list")
+o, a = rednet.receive(2)
+r = {}
+if o == nil then error("Could not connect to server!") else
+while a ~= "*eof" do
+table.insert(r, a)
+o, a = rednet.receive()
+end
+print("Connection sucessful!")
+print("Server files:")
+textutils.tabulate(r)
+print("1. Download")
+print("2. Upload")
+print("3. Rename")
+print("4. Delete")
+print("5. Refresh")
+print("6, Quit")
+option = read()
+if option == "1" then downloadAll(r)
+elseif option == "2" then upload()
+elseif option == "3" then rename()
+elseif option == "4" then delete()
+elseif option == "5" then main()
+elseif option == "6" then
+end
+end
+end
+
+term.clear()
+term.setCursorPos(1,1)
+write ("Connect to which server: ")
+sserver = read()
+server = (sserver + 0)
+write ("Enter the server's password: ")
+pass = read("*")
+rednet.open("right")
+rednet.open("left")
+rednet.open("top")
+rednet.open("bottom")
+rednet.open("front")
+rednet.open("back")
+main()
