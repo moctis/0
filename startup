@@ -2,7 +2,7 @@ term.clear()
 term.setCursorPos(1,0)
 print('----- #',os.getComputerID(),' : ',os.getComputerLabel()," -----")
 print(' ')
-if shell.getRunningProgram()=="disk/startup" and os.getComputerLabel()=='' then
+if shell.getRunningProgram()=="disk/startup" and os.getComputerLabel()==nil then
  shell.run('/disk/deploy')
 end
 shell.setPath(".:/rom/programs:/bin:/program:/prog")
