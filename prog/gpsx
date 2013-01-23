@@ -3,13 +3,13 @@ fn.open()
 local i=0
 while true do
  if #t==1 then
-  local x,y,z = gps.locate(10)
+  local x,y,z = gps.locate(2)
   if x~=nil then
    os.setComputerLabel('gpsx host '..x..' '..y..' '..z)
    os.reboot()
   end
  else
-  local x,y,z = gps.locate(10)
+  local x,y,z = gps.locate(2)
   if x~=nil then
    if x~=tonumber(t[3]) or y~=tonumber(t[4]) or z~=tonumber(t[5]) then
     os.setComputerLabel('gpsx host '..x..' '..y..' '..z)

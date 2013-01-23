@@ -2,7 +2,7 @@ fn.init()
 while true do
  fn.lprint("waiting...")
  local i,m,d=fn.recv()
- print(i,m,d)
+ --print(i,m,d)
  if m then 
   print(i,"<",m)
   SID=i

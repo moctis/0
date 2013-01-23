@@ -1,0 +1,42 @@
+function fn.setup()
+ local i,id
+ fn.up()
+ fn.turn('S')
+ for i=16,5,-1 do
+  turtle.select(i)
+  if turtle.getItemCount(i)==1 then
+   id=i-4
+   turtle.placeDown()
+   local m=peripheral.wrap("bottom")
+   m.turnOn()
+   turtle.select(1)
+   turtle.dropDown(2)
+   sleep(10)
+   fn.send(m.getID(),'move '..id..' S')
+   sleep(5)
+  end
+ end
+ fn.down()
+ fn.digRegister()
+end
+
+function fn.destroy(label)
+ fn.turn('S')
+ if label == nil then label="" else label=' '..label end
+ fn.all('goDestroy'..label)
+ sleep(5)
+ while turtle.detect() do
+  while turtle.suck() do end
+  turtle.dig()
+  sleep(1)
+ end
+end
+
+function fn.goDestroy(label)
+ if label ~= nil then os.getComputerlabel(label) end
+ fn.turn('N')
+ while true do
+  fn.forward()
+  sleep(0.5)
+ end
+end

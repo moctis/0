@@ -1,3 +1,4 @@
+basey=21
 function fn.digPlusRun()
  local i=0 
  pos.ox,pos.oy,pos.oz,pos.odir=pos.x,pos.y,pos.z,pos.dir 
@@ -35,7 +36,7 @@ end
 function fn.digPlusBase()
  local x,y,z=pos.x,pos.y,pos.z
  x=x-fn.mod(x,5)
- y=19
+ y=basey
  fn.goto(x,y,z,'N')
 end
 
@@ -49,7 +50,7 @@ function fn.digPlusHome()
  local x,y,z=pos.x,pos.y,pos.z
  z=fn.mod(z,5)
  x=x-fn.mod(x,5)+h[z]
- y=19
+ y=basey
  fn.lprint(x,' ',y,' ',pos.z,' E')
  fn.goto(x,y,pos.z,'E')
 end
@@ -57,7 +58,7 @@ end
 function fn.digPlusNext()
  local x,y,z=pos.x,pos.y,pos.z
  x=x-fn.mod(x,5)+5
- y=19
+ y=basey
  fn.goto(x,y,z,'N')
 end
 
