@@ -62,6 +62,10 @@ function fn.digPlusNext()
  fn.goto(x,y,z,'N')
 end
 
+function fn.digPlusDropAll()
+ return fn.digPlusDrop(1)
+end
+
 function fn.digPlusDrop(start)
  local i,c,count
  if start==nil then start=2 end

@@ -10,7 +10,7 @@ function fn.setup()
    local m=peripheral.wrap("bottom")
    m.turnOn()
    turtle.select(1)
-   turtle.dropDown(2)
+   turtle.dropDown(10)
    sleep(10)
    fn.send(m.getID(),'move '..id..' S')
    sleep(5)
@@ -23,12 +23,12 @@ end
 function fn.destroy(label)
  fn.turn('S')
  if label == nil then label="" else label=' '..label end
- fn.all('goDestroy'..label)
+ fn.all('goDestroy '..label)
  sleep(5)
  while turtle.detect() do
   while turtle.suck() do end
   turtle.dig()
-  sleep(1)
+  sleep(0.5)
  end
 end
 
