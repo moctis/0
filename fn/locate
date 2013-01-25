@@ -3,6 +3,7 @@ pos.x=0
 pos.y=0
 pos.z=0
 pos.dir=0
+pos.valid=false
 
 dirs={[0]='N',[1]='E',[2]='S',[3]='W'}
 
@@ -14,9 +15,10 @@ function fn.locate(timeout)
  while true do
   local x,y,z=gps.locate(timeout)
   if x then
-   pos.x,pos.y,pos.z=x,y,z
+   pos.x,pos.y,pos.z,pos.valid=x,y,z,true
    return "POS "..pos.x.." "..pos.y.." "..pos.z
   else
+   pos.valid=false
    print('locating...')
   end
  end

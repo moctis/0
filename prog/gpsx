@@ -1,22 +1,61 @@
-local t=lib.split(os.getComputerLabel())
-fn.open()
-local i=0
-while true do
- if #t==1 then
-  local x,y,z = gps.locate(2)
-  if x~=nil then
-   os.setComputerLabel('gpsx host '..x..' '..y..' '..z)
-   os.reboot()
-  end
- else
-  local x,y,z = gps.locate(2)
-  if x~=nil then
-   if x~=tonumber(t[3]) or y~=tonumber(t[4]) or z~=tonumber(t[5]) then
-    os.setComputerLabel('gpsx host '..x..' '..y..' '..z)
-    os.reboot()
-   end
-  end
-  shell.run('gps', unpack(t,2))
- end
- sleep(10)
+function gpsx(cmd,x,y,z) 
+	if cmd=="host" or cmd=="base" then
+		while x==nill or y==nil or z==nil do
+		      x,y,z = gps.locate(10)
+		end
+		pos.x,pos.y,pos.z = tonumber(x),tonumber(y),tonumber(z)
+	elseif cmd=="N" or cmd=="E" or cmd=="S" or cmd=="W" then
+		local i,m,d,loc = 0,nil,0,nil
+		while m==nill do
+			rednet.broadcast("BASE")
+			i,m,d=rednet.receive(10)
+			loc=textutils.unserialize(m)
+			if loc[4] ~= "base" then m=nil end
+		end
+		if d < 3 then 
+		print(pos.x)
+			pos.x,pos.y,pos.z=xyz(nil,cmd)			
+			pos.dir=cmd
+			x,y,z=xyz(cmd)
+			fn.refuel(x+y+z)
+			fn.goto(x,y,z,cmd)
+		end
+		x,y,z=xyz(cmd)
+		pos.x,pos.y,pos.z=loc[1]+x,loc[2]+y,loc[3]+z
+	end
+	
+	print("POS ", pos.x,' ',pos.y,' ',pos.z)
+	print( "Serving GPS requests")
+
+	local nServed = 0
+	while true do
+		sender,message,distance = rednet.receive()
+		if (message == "PING") or (message=="BASE" and cmd=="base") then
+			rednet.send(sender, textutils.serialize({pos.x,pos.y,pos.z,cmd}))
+			
+			nServed = nServed + 1
+			if nServed > 1 then
+				local x,y = term.getCursorPos()
+				term.setCursorPos(1,y-1)
+			end
+			print( nServed.." GPS Requests served" )
+		end
+	end
 end
+
+function xyz(n,d)
+ if d=='N' then return 0,0,-1 end
+ if d=='E' then return 1,0,0 end
+ if d=='S' then return 0,0,1 end
+ if d=='W' then return -1,0,0 end
+ if n=='N' then return 2,5,-6 end
+ if n=='E' then return 8,3,3 end
+ if n=='S' then return 2,7,9 end
+ if n=='W' then return -7,2,2 end
+end
+
+function gpsx_host()
+end
+
+for _,s in pairs(redstone.getSides()) do rednet.open(s) end
+gpsx(...)
