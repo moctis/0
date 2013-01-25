@@ -1,6 +1,6 @@
 digBlocks=true
 maxDrone = 0 
-basey=21
+basey=19
 digWay = true
 echo_recv = true
 dropFuel=16

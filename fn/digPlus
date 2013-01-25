@@ -5,14 +5,14 @@ function fn.digPlusRun()
  fn.refuel(60)
  fn.digDown()
  while fn.down() and pos.y >= 6 do
-  fn.lprint('dig down: '..fn.where())
+  status('dig down: '..fn.where())
   for i=1,4 do 
    fn.tryDig(5)
    fn.left()
   end 
   fn.digDown()
  end
- fn.lprint('return: '..fn.where())
+ status('return: '..fn.where())
  fn.goto(pos.ox,pos.oy-1,pos.oz,pos.odir)
  fn.lprint('fill hole')
  turtle.select(2)
@@ -38,7 +38,6 @@ function fn.digPlusBase()
 end
 
 function fn.mod(x,d)
- print('mod ',x,' ',d)
  return x % d
 end
 
@@ -48,7 +47,7 @@ function fn.digPlusHome()
  z=fn.mod(z,5)
  x=x-fn.mod(x,5)+h[z]
  y=basey
- fn.lprint(x,' ',y,' ',pos.z,' E')
+ status(x,' ',y,' ',pos.z,' E')
  fn.goto(x,y,pos.z,'E')
 end
 
@@ -68,7 +67,7 @@ function fn.digPlusDrop(start)
  if start==nil then start=2 end
  i,c = 1,0
  while true do
-  fn.lprint('drop remain #',i,' try ',c)
+  status('drop remain #',i,' try ',c)
   turtle.select(i)
   count=turtle.getItemCount(i)
   if i==1 then 
@@ -87,7 +86,7 @@ function fn.digPlusDrop(start)
   if i>16 then 
     i,c = 1,c+1
     if c>10 then 
-      fn.lprint('digPlusDrop done')
+      status('digPlusDrop done')
       return 
     end
   end

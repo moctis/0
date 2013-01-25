@@ -1,6 +1,6 @@
 fn.init()
 while true do
- fn.lprint("waiting...")
+ status("waiting...")
  local i,m,d=fn.recv()
  --print(i,m,d)
  if m then 

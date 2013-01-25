@@ -7,7 +7,7 @@ function fn.refuel(l)
   if not turtle.refuel(1) then no=no+1 end
   if no>16 then 
    no=1 
-   print('refueling...')
+   status('refueling...')
   end
  end
  return turtle.getFuelLevel()

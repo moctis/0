@@ -3,7 +3,7 @@ function fn.digHello(id)
 end
 
 function fn.digRegister()
- local ans = fn.digSend('digHello '..os.getComputerID())
+ local ans = fn.all('digHello',os.getComputerID())
  local k,v
  maxDrone = 0
  for k,v in pairs(ans) do
@@ -18,7 +18,7 @@ function fn.digWait()
  echo_recv = false
  while true do
   sleep(5)
-  local ans = fn.digSend('digHello '..os.getComputerID())
+  local ans = fn.all('digHello '..os.getComputerID())
   c = 0
   for k,v in pairs(ans) do
    c = c+1
@@ -31,23 +31,23 @@ function fn.digWait()
 end
 
 function fn.digBase()
- fn.digSend('digPlusBase')
+ fn.all('digPlusBase')
  fn.digPlusBase()
  fn.digWait()
 end
 
 function fn.digHome()
- fn.digSend('digPlusHome')
+ fn.all('digPlusHome')
  fn.digWait()
 end
 
 function fn.digRun()
- fn.digSend('digPlusRun')
+ fn.all('digPlusRun')
  fn.digWait()
 end
 
 function fn.digNext()
- fn.digSend('digPlusNext')
+ fn.all('digPlusNext')
  fn.go(5,0,0,'N')
  fn.digWait()
 end
@@ -64,9 +64,9 @@ function fn.digDrop(all)
  turtle.select(3)
  turtle.place()
  if all == nill then
-  fn.digSend('digPlusDrop')
+  fn.all('digPlusDrop')
  else
-  fn.digSend('digPlusDropAll')
+  fn.all('digPlusDropAll')
  end
  fn.digPlusDrop(4)
  fn.digWait()

@@ -1,15 +1,16 @@
 function fn.all(...)
  local ans={}
  local count=0
- local cmd=lib.join(...)
+ local cmd=fn.join({...})
+ print(cmd)
  fn.broadcast(cmd)
- fn.lprint(cmd.."  "..count.."/"..maxDrone)
+ status(cmd.."  "..count.."/"..maxDrone)
  while true do
   local i,m,d=fn.recv(2)
   if i==nil then break end
   ans['com'..i]=m
   count=count+1
-  fn.lprint(cmd.."  "..count.."/"..maxDrone)
+  status(cmd.."  "..count.."/"..maxDrone)
  end
  return ans
 end

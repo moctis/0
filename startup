@@ -1,3 +1,4 @@
+while os.getComputerLabel() == nill do sleep(1) end
 term.clear()
 term.setCursorPos(1,0)
 print('----- #',os.getComputerID(),' : ',os.getComputerLabel()," -----")

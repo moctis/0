@@ -1,13 +1,28 @@
-function lprint(...)
-  local cx,cy = term.getCursorPos()
-  term.setCursorPos(1,cy-1)
+ss=false
+function status(...)  
+  local cx,cy = term.getCursorPos()  
+  term.setCursorPos(1,cy)
   term.clearLine()
   print(...)
+  cx,cy = term.getCursorPos()
+  term.setCursorPos(1,cy-1)
+  ss=true
 end
+fn.status = status
+
+_print=print
+function print(...)
+  if ss then
+    local cx,cy = term.getCursorPos()  
+    term.setCursorPos(1,cy)
+    term.clearLine()
+  end
+  _print(...)
+end
+
 fn.lprint=lprint
 
-
-function split(data) 
+function fn.split(data) 
   local t,i={},1
   for x in string.gmatch(data,'[^%s]+') do
     t[i],i=x,i+1
@@ -15,7 +30,7 @@ function split(data)
   return t
 end
 
-function join(t,s)  
+function fn.join(t,s)  
   local msg=''
   if s==nil then s=1 end
   for i=s,#t do
@@ -23,17 +38,17 @@ function join(t,s)
   end
   return msg
 end
- 
-function text(t)
+
+function fn.text(t)
   return textutils.serialize(t)
 end
-
-function table(t)
+ 
+function fn.table(t)
   return textutils.unserialize(t)
 end
  
-function printTable(...)
-  print(join({...}))
+function print_(...)
+  print(fn.join({...}))
 end
 
 function tobool(a)
@@ -41,6 +56,5 @@ function tobool(a)
 end
 
 function fn.pp(a,b)
- a,b=tobool(a),tonumber(b)
- return a,b+1
-end
+ return a,b
+end 

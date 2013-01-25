@@ -11,7 +11,7 @@ function fn.dropFuel()
     i=i+1
     if i>16 then 
       i=1 
-      fn.lprint('wait fuel')
+      status('wait fuel')
     end
   end
 end

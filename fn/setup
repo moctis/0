@@ -11,7 +11,7 @@ function fn.setup()
    m.turnOn()
    fn.dropFuel()
    sleep(10)
-   fn.send(m.getID(),'move '..id..' S')
+   fn.send(m.getID(), 'move',id,'S')
    sleep(5)
   end
  end

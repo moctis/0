@@ -5,7 +5,7 @@ function fn.call(cmd, ...)
       function() 
         return fn[cmd](unpack(arg, 1)) 
       end)}
-    printTable(unpack(ret,2))
+    print_(unpack(ret,2))
   end
 end
 

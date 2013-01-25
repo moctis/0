@@ -13,8 +13,6 @@ for _,f in ipairs(l) do
 end
 
 function injectRun(cmd, ...)
- -- local s = shell.resolveProgram(cmd)
- -- if s==nil then
  local p={...}
  for i=1,#p do p[i]=tonumber(p[i]) end
  if fn[cmd] then
