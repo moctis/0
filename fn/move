@@ -2,12 +2,12 @@ function fn.refuel(l)
  local no=1
  l=tonumber(l)
  if l==nil then l=16 end
- while turtle.getFuelLevel() <= l do
+ while turtle.getFuelLevel()-10 <= l do
   turtle.select(no)
   if not turtle.refuel(1) then no=no+1 end
   if no>16 then 
    no=1 
-   status('refueling...')
+   status('refueling '..os.time())
   end
  end
  return turtle.getFuelLevel()

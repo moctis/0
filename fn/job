@@ -1,0 +1,26 @@
+jobExit = false
+function fn.jobCommander()
+	jobExit = false
+	local tCommandHistory = {}
+	local oldQuit = fn.quit
+	fn.quit = fn.jobQuit
+	while not jobExit do
+		write( shell.dir() .. ">> " )
+		local sLine = read( nil, tCommandHistory )
+		table.insert( tCommandHistory, sLine )
+
+		arg=fn.split(sLine)
+		if arg[1] then 
+			shell.run(arg[1],unpack(arg,2))
+		end
+	end
+	fn.quit=oldQuit
+end
+
+function fn.jobQuit()
+	jobExit = true
+end
+
+function fn.sendJob(sender)
+
+end

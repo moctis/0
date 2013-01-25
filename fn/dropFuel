@@ -1,17 +1,27 @@
-function fn.dropFuel()
+function fn.dropFuel(down,up)
   local i=1
   while true do
     turtle.select(i)
     if turtle.compareTo(1) then
       if turtle.getItemCount(i)>dropFuel then
-        turtle.dropDown(dropFuel)
+        if down == true then turtle.dropDown(dropFuel) 
+	elseif up == true then turtle.dropUp(dropFuel) 
+	else turtle.drop(dropFuel) end
         return
       end
     end
     i=i+1
     if i>16 then 
       i=1 
-      status('wait fuel')
+      status('wait fuel '..os.time())
     end
   end
+end
+
+function fn.dropFuelDown()
+	fn.dropFuel(true,false)
+end
+
+function fn.dropFuelUp()
+	fn.dropFuel(false,true)
 end

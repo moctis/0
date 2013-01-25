@@ -1,36 +1,25 @@
-BaseID=nil
 function gpsx(cmd,x,y,z)
 	local loc,baseid=nil,0
-	local gx,gy,gz
 	if cmd=="base" then
 		while x==nill or y==nil or z==nil do
 		      x,y,z = gps.locate(2)
 		end
 		pos.x,pos.y,pos.z,pos.dir = tonumber(x),tonumber(y),tonumber(z),0
 	elseif cmd=="setup" then
-		if x == nil then
-			x,y,z=pos.x,pos.y,pos.z
-		end
-		x,y,z,dir = tonumber(x),tonumber(y),tonumber(z),0
-		pos.x,pos.y,pos.z,pos.dir = 0,0,0,0
-		dropWay=false
+		pos.x,pos.y,pos.z,pos.dir = tonumber(x),tonumber(y),tonumber(z),0
+		fn.turn('N')
 		for baseid=0,3 do
 			print("setup "..dirs[pos.dir])
-			gx,gy,gz=xyz(dirs[baseid])
-			gy=gy-1
-			fn.goto(gx,gy,gz,baseid)
-			fn.tryDigUp()
+			fn.tryDig()
 			turtle.select(5+baseid)
-			if turtle.placeUp() then 
+			if turtle.place() then 
 				sleep(0.5)
-				fn.dropFuelUp()
-				local m=peripheral.wrap("top")
-				if m then m.turnOn() end
+				fn.dropFuel()
+				local m=peripheral.wrap("front")
+				m.turnOn()				
 			end
-			gx,gy,gz=xyz(nil, dirs[baseid])
-			fn.goto(gx,gy,gz,baseid)
+			fn.right()
 		end
-		fn.goto(0,0,0,0)
 		os.setComputerLabel("gpsx base "..x.." "..y.." ".. z)
 		term.clear()
 		os.reboot()
@@ -46,68 +35,53 @@ function gpsx(cmd,x,y,z)
 			turtle.select(9)
 			while turtle.suck() do sleep(0.5) end
 			turtle.select(5+baseid)
-			turtle.dropUp()
 			fn.dig()
 			fn.right()
 		end
 		return
 	elseif cmd=="N" or cmd=="E" or cmd=="S" or cmd=="W" then
-		loc = gpsxBase()
+		local m,d = nil,0
+		while m==nill do
+			status('locate base '..os.time())
+			rednet.broadcast("BASE")
+			baseid,m,d=rednet.receive(2) 
+			if m~= nil then
+				loc=textutils.unserialize(m)
+				if loc == nil then m=nil 
+				elseif loc[4] ~= "base" then m=nil end
+			end
+			if m==nil then sleep(1) end			 
+		end
+		if d < 3 then			
+			pos.x,pos.y,pos.z=xyz(nil,cmd)
+			pos.dir=fn.todir(cmd)
+			x,y,z=xyz(cmd)
+			fn.refuel(30)
+			fn.goto(x,y,z,cmd)
+		end
 		x,y,z=xyz(cmd)
 		pos.x,pos.y,pos.z,pos.dir=loc[1]+x,loc[2]+y,loc[3]+z,fn.todir(cmd)
 	end
 	
-	parallel.waitForAny(
-		function() 
-			gpsxServe(cmd, loc)
-		end,
-		function()
-			fn.jobCommander()
-		end
-	)
-	
-end
-
-function gpsxBase()
-	local m,d,loc = nil,0,nil
-	while m==nill do
-		status('locate base '..os.time())
-		rednet.broadcast("BASE")
-		BaseID,m,d=rednet.receive(2) 
-		if m~= nil then
-			loc=textutils.unserialize(m)
-			if loc == nil then m=nil 
-			elseif loc[4] ~= "base" then m=nil end
-		end
-		if m==nil then sleep(2) end			 
-	end
-	return loc
-end
-
-function gpsxServe(cmd, loc)
-	local x,y,z
-	term.clear()
-	term.setCursorPos(20,1)
-	print("[Serving GPS]")
 	print("POS ", pos.x,' ',pos.y,' ',pos.z)
+	print( "Serving GPS requests")
 
 	local nServed = 0
 	while true do
 		sender,message,distance = rednet.receive()
 		if (message == "PING") or (message=="BASE") then
-			if cmd=="base" and message=="BASE" then
+			if cmd=="base" then
 				rednet.send(sender, textutils.serialize({pos.x,pos.y,pos.z,cmd}))
 			else
 				rednet.send(sender, textutils.serialize({pos.x,pos.y,pos.z}))
 			end
 			
 			nServed = nServed + 1
-			x,y = term.getCursorPos()
-			term.setCursorPos(20,1)
-			print("[GPS Requests " ..nServed.."]")
-			term.setCursorPos(x,y)
-		elseif message=="JOB" and cmd=="base" then
-			fn.sendJob(sender)
+			if nServed > 1 then
+				local x,y = term.getCursorPos()
+				term.setCursorPos(1,y-1)
+			end
+			print( nServed.." GPS Requests served" )
 		elseif message=="DEL" and loc~=nil then
 			x,y,z=xyz(nil,cmd)
 			fn.refuel(30)

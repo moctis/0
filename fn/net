@@ -34,5 +34,5 @@ function fn.init()
  fn.locate()
  status(fn.where())
  fn.getDir()
- status(fn.where())
+ print(fn.where())
 end

@@ -1,8 +1,8 @@
 function fn.digPlusRun()
  local i=0 
- pos.ox,pos.oy,pos.oz,pos.odir=pos.x,pos.y,pos.z,pos.dir 
- turtle.select(2)
+ pos.ox,pos.oy,pos.oz,pos.odir=pos.x,pos.y,pos.z,pos.dir  
  fn.refuel(60)
+ turtle.select(1)
  fn.digDown()
  while fn.down() and pos.y >= 6 do
   status('dig down: '..fn.where())
