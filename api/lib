@@ -1,20 +1,18 @@
 function split(data) 
-	local t={} 
-	local i=1
-	for x in string.gmatch(data,'[^%s]+') do
-	 t[i]=x
-	 i=i+1
-	end
-	return t
+  local t,i={},1
+  for x in string.gmatch(data,'[^%s]+') do
+    t[i],i=x,i+1
+  end
+  return t
 end
 
-function join(t,s)
- local msg=''
- if s==nil then s=1 end
- for i=s,#t do
-  msg=msg..t[i]..' '
- end
- return msg
+function join(t,s)  
+  local msg=''
+  if s==nil then s=1 end
+  for i=s,#t do
+    msg=msg..tostring(t[i])..' '
+  end
+  return msg
 end
  
 function text(t)

@@ -5,4 +5,4 @@ digWay = true
 echo_recv = true
 dropFuel=16
 remainFuel=16
-ver=1
+ver=2

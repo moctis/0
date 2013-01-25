@@ -1,14 +1,11 @@
 function fn.call(cmd, ...)
   if (fn[cmd]) then
-    local ret = { pcall(function() return fn[cmd](...) end ) }
-    if ret[1] then
-      local n=1
-      while (ret[n+1] ~= nil) do 
-        print(tostring(ret[n+1])) 
-      end
-    else 
-      print(ret[2])
-    end    
+    local arg = {...}
+    local ret = {pcall(
+      function() 
+        return fn[cmd](unpack(arg, 1)) 
+      end)}
+    printTable(unpack(ret,2))
   end
 end
 

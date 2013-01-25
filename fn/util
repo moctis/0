@@ -1,6 +1,46 @@
-function fn.lprint(...)
+function lprint(...)
   local cx,cy = term.getCursorPos()
   term.setCursorPos(1,cy-1)
   term.clearLine()
   print(...)
+end
+fn.lprint=lprint
+
+
+function split(data) 
+  local t,i={},1
+  for x in string.gmatch(data,'[^%s]+') do
+    t[i],i=x,i+1
+  end
+  return t
+end
+
+function join(t,s)  
+  local msg=''
+  if s==nil then s=1 end
+  for i=s,#t do
+    msg=msg..tostring(t[i])..' '
+  end
+  return msg
+end
+ 
+function text(t)
+  return textutils.serialize(t)
+end
+
+function table(t)
+  return textutils.unserialize(t)
+end
+ 
+function printTable(...)
+  print(join({...}))
+end
+
+function tobool(a)
+  return (a=='true')
+end
+
+function fn.pp(a,b)
+ a,b=tobool(a),tonumber(b)
+ return a,b+1
 end
