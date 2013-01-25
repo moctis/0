@@ -1,11 +1,10 @@
-basey=21
 function fn.digPlusRun()
  local i=0 
  pos.ox,pos.oy,pos.oz,pos.odir=pos.x,pos.y,pos.z,pos.dir 
  turtle.select(2)
  fn.refuel(60)
  fn.digDown()
- while fn.down() do
+ while fn.down() and pos.y >= 6 do
   fn.lprint('dig down: '..fn.where())
   for i=1,4 do 
    fn.tryDig(5)
@@ -26,11 +25,9 @@ function fn.digPlusRun()
 end
 
 function fn.digPlusLoop()
- while true do
-  fn.refuel(60)
-  fn.digPlus()
-  fn.go(0,0,-5,'N')
- end
+ fn.digPlusHome()
+ fn.digPlusRun()
+ fn.digPlusNext()
 end
 
 function fn.digPlusBase()
@@ -69,50 +66,30 @@ end
 function fn.digPlusDrop(start)
  local i,c,count
  if start==nil then start=2 end
- i,c=start,0
+ i,c = 1,0
  while true do
   fn.lprint('drop remain #',i,' try ',c)
   turtle.select(i)
   count=turtle.getItemCount(i)
-  if i==start then count=count-1 end
+  if i==1 then 
+    if count>remainFuel then count=remainFuel end
+  elseif i==start then count=count-1 
+  elseif i<start then
+    count=0
+  end
+  
   if count>0 then
    turtle.drop(count)
    c=0
-  else
-   if i>=16 then 
-    i=start-1 
-    c=c+1
-   end      
-   if c>10 then 
-    fn.lprint('digPlusDrop done')
-    return 
-   end
   end
-  i=i+1
-  if i>16 then i=start end
- end
-end
 
-local digPlusState="home"
-
-function fn.digPlus(s)
- if s==nil then digPlusState="run" end
- while true do
-  if digPlusState=='base' then
-   fn.digPlusBase()
-   digPlusState="home"
-  elseif digPlusState=='home' then
-   fn.digPlusHome()
-   digPlusState="dig"
-  elseif digPlusState=='run' then
-   fn.digPlusRun()
-   digPlusState="next"
-  elseif digPlusState=="next" then
-   fn.digPlusNext()
-   digPlusState="base"
-  elseif digPlusState=="loop" then
-   digPlusState="base"
+  i = i+1
+  if i>16 then 
+    i,c = 1,c+1
+    if c>10 then 
+      fn.lprint('digPlusDrop done')
+      return 
+    end
   end
-  if s~='loop' then return end
  end
 end

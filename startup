@@ -2,8 +2,10 @@ term.clear()
 term.setCursorPos(1,0)
 print('----- #',os.getComputerID(),' : ',os.getComputerLabel()," -----")
 print(' ')
-if shell.getRunningProgram()=="disk/startup" and os.getComputerLabel()==nil then
- shell.run('/disk/deploy')
+if shell.getRunningProgram()=="disk/startup" then
+ if os.getComputerLabel()==nil or os.getComputerLabel()=="drone" then
+  shell.run('/disk/deploy')
+ end
 end
 shell.setPath(".:/rom/programs:/bin:/program:/prog")
 shell.run('/fn/autorun')

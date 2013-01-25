@@ -1,5 +1,3 @@
-digBlocks=true
-
 function fn.digable(v)
  if v~=nil then
   digBlocks = (v=='true')

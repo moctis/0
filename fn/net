@@ -1,5 +1,3 @@
-echo_recv = true
-
 function fn.open()
  for _,s in pairs(redstone.getSides()) do
   rednet.open(s)

@@ -1,0 +1,7 @@
+function fn.version()
+ fn.all('getVer',os.getComputerID())
+end
+
+function fn.getVer(id)
+ fn.send(tonumber(id), ver)
+end

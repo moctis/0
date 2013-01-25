@@ -1,0 +1,13 @@
+local t=math.floor(os.time())
+print("backup @"..t)
+
+local function save(p)
+ shell.run('cp','/disk/'..p,'/disk/bak/'..t..'/'..p)
+ shell.run('rm','/disk/'..p)
+ shell.run('cp','/'..p,'/disk/'..p)
+end
+
+save('bin')
+save('api')
+save('prog')
+save('fn')

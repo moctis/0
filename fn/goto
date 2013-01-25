@@ -1,5 +1,3 @@
-digWay = true
-
 function fn.goto(x,y,z,dir)
  x=tonumber(x)
  y=tonumber(y)

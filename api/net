@@ -27,4 +27,3 @@ function send(id, o)
   print("< "..o)
   rednet.send(id, o)
 end
-

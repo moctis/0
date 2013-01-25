@@ -1,11 +1,16 @@
-
 function fn.call(cmd, ...)
   if (fn[cmd]) then
-   --print(cmd,...)
-   print(fn[cmd](...))
+    local ret = { pcall(function() return fn[cmd](...) end ) }
+    if ret[1] then
+      local n=1
+      while (ret[n+1] ~= nil) do 
+        print(tostring(ret[n+1])) 
+      end
+    else 
+      print(ret[2])
+    end    
   end
 end
-
 
 local arg={...}
 if #arg > 0 then

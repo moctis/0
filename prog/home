@@ -1,7 +1,0 @@
-net.open()
-local cx,cy,cz=tur.getPos()
-cx=cx-(cx % 10)
-cy=20
-cz=cz-(cz % 10)
-shell.run('goto',cx,cy,cz, 3)
-shell.run('goto',cx+1,cy,cz+1,1)

@@ -1,2 +1,5 @@
 fn.init()
+print('wait all drone start')
+sleep(15)
 fn.digRegister()
+fn.digBase()

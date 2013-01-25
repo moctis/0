@@ -1,0 +1,23 @@
+function deploy(p,q)
+ if q==nil then q=p end
+ shell.run('rm','/'..p)
+ shell.run('cp','/disk/'..p,'/'..q)
+end
+
+local t={...}
+
+deploy('fn')
+deploy('bin')
+deploy('api')
+deploy('prog')
+deploy('startup')
+
+if #t>0 then
+ local s=''
+ for n=1,#t do
+  s=s..t[n]..' '
+ end
+ os.setComputerLabel(s)
+else
+ os.setComputerLabel('drone')
+end

@@ -1,0 +1,2 @@
+shell.run('/disk/deploy','test2')
+shell.run('/startup')

@@ -7,7 +7,7 @@ fn={}
 
 for _,f in ipairs(l) do
  if not(f=='autorun') then
---print(d..'/'..f)
+  --print(d..'/'..f)
   shell.run('/'..d..'/'..f)
  end
 end

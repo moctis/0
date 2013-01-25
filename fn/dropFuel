@@ -1,0 +1,17 @@
+function fn.dropFuel()
+  local i=1
+  while true do
+    turtle.select(i)
+    if turtle.compareTo(1) then
+      if turtle.getItemCount(i)>dropFuel then
+        turtle.dropDown(dropFuel)
+        return
+      end
+    end
+    i=i+1
+    if i>16 then 
+      i=1 
+      fn.lprint('wait fuel')
+    end
+  end
+end

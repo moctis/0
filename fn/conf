@@ -1,0 +1,8 @@
+digBlocks=true
+maxDrone = 0 
+basey=21
+digWay = true
+echo_recv = true
+dropFuel=16
+remainFuel=16
+ver=1

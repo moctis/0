@@ -4,7 +4,7 @@ while true do
  local i,m,d=fn.recv()
  --print(i,m,d)
  if m then 
-  print(i,"<",m)
+  --print(i,"<",m)
   SID=i
   local t=lib.split(m)
   if t[1] ~= nil and #t==1 then   
