@@ -31,6 +31,7 @@ end
 
 function fn.try(detect,act,done, n)
  local c=0
+ if n==nil then n=-1 end
  n=tonumber(n)
  while detect() and c~=n do
   if act() then

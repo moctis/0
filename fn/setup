@@ -27,7 +27,7 @@ function fn.destroy(label)
  while turtle.detect() do
   turtle.select(1)
   while turtle.suck() do end
-  turtle.select(5)
+  fn.findEmptySlot()
   turtle.dig()
   sleep(0.5)
  end

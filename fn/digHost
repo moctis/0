@@ -63,7 +63,7 @@ function fn.digDrop(all)
  fn.back()
  turtle.select(3)
  turtle.place()
- if all == nill then
+ if all == nil then
   fn.all('digPlusDrop')
  else
   fn.all('digPlusDropAll')
@@ -80,4 +80,21 @@ function fn.digs()
  fn.digNext()
  fn.digDrop()
  end
+end
+
+function fn.base()
+	local m,d,loc = nil,0,nil
+	while m==nill do
+		status('locate base '..os.time())
+		sleep(math.random(1,5))
+		rednet.broadcast("BASE")
+		BaseID,m,d=rednet.receive(2) 
+		--print_(BaseID,m,d)
+		if m~= nil then
+			loc=textutils.unserialize(m)
+			if loc == nil then m=nil 
+			elseif loc[4] ~= "base" then m=nil end
+		end
+	end
+	return loc
 end

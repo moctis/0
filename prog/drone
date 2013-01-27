@@ -1,4 +1,6 @@
 fn.init()
+local loc=fn.base()
+basey=loc[2]-2
 while true do
  status("waiting...")
  local i,m,d=fn.recv()

@@ -1,0 +1,39 @@
+function fn.findEmptySlot()
+	local i=1
+	while true do
+		turtle.select(i)
+		if turtle.getItemCount(i)==0 then
+			return
+		end
+		i=i+1
+		if i>16 then
+			i=1
+			status('find empty slot'..os.time())
+			sleep(5)
+		end
+	end
+end
+
+-- if  'slot' lower than 'keep' find another same type
+function fn.selectAdv(slot,keep)
+	if slot==nil then slot=1 end
+	if keep==nil then keep=0 end
+	slot,keep=tonumber(slot),tonumber(keep)
+	turtle.select(slot)
+	if turtle.getItemCount(slot) > keep then return slot end
+	local i=slot+1
+	repeat
+		if turtle.getItemCount(i) > 0 then
+			turtle.select(i)
+			if turtle.compareTo(slot) then 
+				return i
+			end
+		end
+		i=i+1
+		if i>16 then i=1 end
+	until i==slot
+	turtle.select(slot)
+	return slot
+end
+
+ 

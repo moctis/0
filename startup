@@ -1,4 +1,7 @@
-while os.getComputerLabel() == nill do sleep(1) end
+if os.getComputerLabel() == nil then 
+	sleep(2) 
+	os.reboot()	
+end
 term.clear()
 term.setCursorPos(1,0)
 print('----- #',os.getComputerID(),' : ',os.getComputerLabel()," -----")

@@ -1,27 +1,25 @@
 function fn.digPlusRun()
  local i=0 
  pos.ox,pos.oy,pos.oz,pos.odir=pos.x,pos.y,pos.z,pos.dir  
- fn.refuel(60)
+ fn.refuel(pos.y*2)
  turtle.select(1)
- fn.digDown()
- while fn.down() and pos.y >= 6 do
-  status('dig down: '..fn.where())
-  for i=1,4 do 
+ while pos.y > 4 do
+  if not fn.tryDown() then break end
+  for i=1,4 do
    fn.tryDig(5)
    fn.left()
-  end 
-  fn.digDown()
+  end   
  end
- status('return: '..fn.where())
- fn.goto(pos.ox,pos.oy-1,pos.oz,pos.odir)
- fn.lprint('fill hole')
- turtle.select(2)
- for i=1,4 do
+ while pos.y ~= pos.oy do
+  fn.tryUp()
+ end
+ fn.selectAdv(conf.placeSlot, 5)
+ for i=1,4 do  
   turtle.place()
   fn.left()
  end
- fn.up()
- turtle.placeDown()
+ fn.tryUp()
+ turtle.placeDown() 
 end
 
 function fn.digPlusLoop()
@@ -52,10 +50,7 @@ function fn.digPlusHome()
 end
 
 function fn.digPlusNext()
- local x,y,z=pos.x,pos.y,pos.z
- x=x-fn.mod(x,5)+5
- y=basey
- fn.goto(x,y,z,'N')
+ fn.move('',5)
 end
 
 function fn.digPlusDropAll()
