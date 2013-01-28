@@ -51,8 +51,14 @@ function print_(...)
   print(fn.join({...}))
 end
 
-function tobool(a)
-  return (a=='true')
+function fn.tobool(value,default)
+  if value==nil then return default end
+  return (value=='true' or value==true)
+end
+
+function fn.tonumber(value,default)
+  if value==nil then return default end
+  return tonumber(value)
 end
 
 function fn.pp(a,b)

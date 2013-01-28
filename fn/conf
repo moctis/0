@@ -1,9 +1,16 @@
 digBlocks=true
 maxDrone = 0 
-basey=19
-digWay = true
-dropWay = true
 echo_recv = true
 dropFuel=16
-remainFuel=16
-ver=2
+
+ver=3
+BaseID=nil
+
+
+conf={}
+conf.dropWay=true
+conf.digCeiling=true
+conf.digButtom=false
+conf.placeSlot=2
+conf.basey=11
+conf.keepFuel=16

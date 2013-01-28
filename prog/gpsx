@@ -1,4 +1,4 @@
-BaseID=nil
+
 function gpsx(cmd,x,y,z)
 	local loc,baseid=nil,0
 	local gx,gy,gz
@@ -6,13 +6,13 @@ function gpsx(cmd,x,y,z)
 		while x==nill or y==nil or z==nil do
 		      x,y,z = gps.locate(2)
 		end
-		pos.x,pos.y,pos.z,pos.dir = tonumber(x),tonumber(y),tonumber(z),0
+		pos.x,pos.y,pos.z,pos.dir,pos.valid = tonumber(x),tonumber(y),tonumber(z),0,true
 	elseif cmd=="setup" then
 		if x == nil then
 			x,y,z=pos.x,pos.y,pos.z
 		end
 		x,y,z,dir = tonumber(x),tonumber(y),tonumber(z),0
-		pos.x,pos.y,pos.z,pos.dir = 0,0,0,0
+		pos.x,pos.y,pos.z,pos.dir,pos.valid = 0,0,0,0,false
 		dropWay=false
 		for baseid=0,3 do
 			print("setup "..dirs[pos.dir])
@@ -52,9 +52,12 @@ function gpsx(cmd,x,y,z)
 		end
 		return
 	elseif cmd=="N" or cmd=="E" or cmd=="S" or cmd=="W" then
-		loc = gpsxBase()
+		loc = fn.base()
 		x,y,z=xyz(cmd)
-		pos.x,pos.y,pos.z,pos.dir=loc[1]+x,loc[2]+y,loc[3]+z,fn.todir(cmd)
+		pos.x,pos.y,pos.z,pos.dir,pos.valid=loc[1]+x,loc[2]+y,loc[3]+z,fn.todir(cmd),true
+	else
+		print("invalid command")
+		return
 	end
 	
 	parallel.waitForAny(
@@ -68,21 +71,7 @@ function gpsx(cmd,x,y,z)
 	
 end
 
-function gpsxBase()
-	local m,d,loc = nil,0,nil
-	while m==nill do
-		status('locate base '..os.time())
-		rednet.broadcast("BASE")
-		BaseID,m,d=rednet.receive(2) 
-		if m~= nil then
-			loc=textutils.unserialize(m)
-			if loc == nil then m=nil 
-			elseif loc[4] ~= "base" then m=nil end
-		end
-		if m==nil then sleep(2) end			 
-	end
-	return loc
-end
+
 
 function gpsxServe(cmd, loc)
 	local x,y,z
@@ -93,12 +82,16 @@ function gpsxServe(cmd, loc)
 
 	local nServed = 0
 	while true do
-		sender,message,distance = rednet.receive()
+		sender,message,distance = rednet.receive(2)
 		if (message == "PING") or (message=="BASE") then
+			--print("pos.valid '",pos.valid, "', cmd '",cmd,"'")
+			--print(" msg '",message,"'"," sender ",sender)
+			if pos.valid then
 			if cmd=="base" and message=="BASE" then
 				rednet.send(sender, textutils.serialize({pos.x,pos.y,pos.z,cmd}))
 			else
 				rednet.send(sender, textutils.serialize({pos.x,pos.y,pos.z}))
+			end
 			end
 			
 			nServed = nServed + 1

@@ -1,6 +1,5 @@
---[[fn.init()
-print('wait all drone start')
-sleep(5)
-fn.digRegister()
-fn.digBase()
-]]
+fn.init()
+--print('wait all drone start')
+--sleep(5)
+--fn.digRegister()
+ 

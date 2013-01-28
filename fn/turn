@@ -12,7 +12,7 @@ end
 
 function fn.todir(idir)
  local i,_dir
- if idir==nil then idir=pos.dir end
+ if idir==nil or idir=='' then idir=pos.dir end
  for i,_dir in pairs(dirs) do 
   if _dir==idir then idir=i end 
  end
