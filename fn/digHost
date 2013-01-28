@@ -57,18 +57,9 @@ function fn.digDropAll()
 end
 
 function fn.digDrop(all)
-<<<<<<< HEAD
  fn.tryDigUp()
  turtle.select(conf.placeSlot)
  turtle.placeUp()
-=======
- fn.turn('N')
- fn.tryForward()
- fn.digUp()
- fn.back()
- turtle.select(3)
- turtle.place()
->>>>>>> 02be933e7b99d324ddd48c3bf35c11fb87415668
  if all == nil then
   fn.all('digPlusDrop')
  else
