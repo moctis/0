@@ -5,6 +5,7 @@ function fn.digPlusRun()
  turtle.select(1)
  while pos.y > 4 do
   if not fn.tryDown() then break end
+<<<<<<< HEAD
   fn.digX()
  end
 
@@ -12,6 +13,16 @@ function fn.digPlusRun()
   fn.tryUp()
  end
 
+=======
+  for i=1,4 do
+   fn.tryDig(5)
+   fn.left()
+  end   
+ end
+ while pos.y ~= pos.oy do
+  fn.tryUp()
+ end
+>>>>>>> 02be933e7b99d324ddd48c3bf35c11fb87415668
  fn.selectAdv(conf.placeSlot, 5)
  for i=1,4 do  
   turtle.place()
@@ -19,6 +30,7 @@ function fn.digPlusRun()
  end
  fn.tryUp()
  turtle.placeDown() 
+<<<<<<< HEAD
 end
 
 function fn.digX()
@@ -26,6 +38,8 @@ function fn.digX()
    fn.tryDig(5)
    fn.left()
   end   
+=======
+>>>>>>> 02be933e7b99d324ddd48c3bf35c11fb87415668
 end
 
 
@@ -57,6 +71,7 @@ function fn.digPlusHome()
 end
 
 function fn.digPlusNext()
+<<<<<<< HEAD
  fn.digPlusHome()
  local x,y,z,dir=pos.x,pos.y,pos.z,''
  x,z=math.floor((x-1)/5),math.floor((z-1)/5)
@@ -71,6 +86,9 @@ function fn.digPlusNext()
 	if x==0 then dir='S' end
  end
  fn.move(dir,5)
+=======
+ fn.move('',5)
+>>>>>>> 02be933e7b99d324ddd48c3bf35c11fb87415668
 end
 
 function fn.digPlusDropAll()

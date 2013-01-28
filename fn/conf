@@ -2,7 +2,11 @@ digBlocks=true
 maxDrone = 0 
 echo_recv = true
 dropFuel=16
+<<<<<<< HEAD
 
+=======
+remainFuel=16
+>>>>>>> 02be933e7b99d324ddd48c3bf35c11fb87415668
 ver=3
 BaseID=nil
 
@@ -11,6 +15,10 @@ conf={}
 conf.dropWay=true
 conf.digCeiling=true
 conf.digButtom=false
+<<<<<<< HEAD
 conf.placeSlot=2
 conf.basey=11
 conf.keepFuel=16
+=======
+conf.placeSlot=2
+>>>>>>> 02be933e7b99d324ddd48c3bf35c11fb87415668
