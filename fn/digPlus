@@ -1,4 +1,6 @@
 function fn.digPlusRun()
+ fn.digPlusHome()
+
  local i=0 
  pos.ox,pos.oy,pos.oz,pos.odir=pos.x,pos.y,pos.z,pos.dir  
  fn.refuel(pos.y*2)
@@ -30,9 +32,20 @@ end
 
 
 function fn.digPlusLoop()
- fn.digPlusHome()
- fn.digPlusRun()
- fn.digPlusNext()
+ while true do
+   fn.digPlusRun()
+   fn.digPlusNext()
+
+   local x,y,z,dir=pos.x,pos.y,pos.z,''
+   x,z=math.floor((x-1)/5),math.floor((z-1)/5)
+ 
+   z=fn.mod(z,4)
+   x=fn.mod(x,4)
+   if z==0 and x==0 then
+     break
+   end
+ end
+
 end
 
 function fn.digPlusBase()
