@@ -24,9 +24,16 @@ function fn.locate(timeout)
  end
 end
 
-function fn.where()
- return "POS "..pos.x.." "..pos.y.." "..pos.z.." "..dirs[pos.dir]
+function fn.where(loc)
+ if loc=="home" then 
+	return "Home",home.x,home.y,home.z,dirs[fn.todir(home.dir)]
+ elseif loc=="base" then
+	return "Base",base.x,base.y,base.z
+ else
+	return "POS",pos.x,pos.y,pos.z,dirs[pos.dir]
+ end
 end
+ 
 
 function fn.getDir()
  fn.locate()
@@ -54,6 +61,30 @@ function fn.getDir()
  end
 end
 
+
+function fn.getBase()
+	local m,d,loc = nil,0,nil
+	while m==nill do
+		status('locate base '..os.time())
+		sleep(math.random(1,5))
+		rednet.broadcast("BASE")
+		BaseID,m,d=rednet.receive(2) 
+		--print_(BaseID,m,d)
+		if m~= nil then
+			loc=textutils.unserialize(m)
+			if loc == nil then m=nil 
+			elseif loc[4] ~= "base" then m=nil end
+		end
+	end
+	base={}
+	base.x=loc[1]
+	base.y=loc[2]
+	base.z=loc[3]
+	base.id=BaseID
+	print_("Base ",base.x,base.y,base.z)
+	return b
+end
+
 function fn.saveHome()
 	home.x,home.y,home.z,home.dir =pos.x,pos.y,pos.z,pos.dir
 	local t = fn.join({home.x,home.y,home.z,dirs[home.dir]})
@@ -79,6 +110,3 @@ function fn.loadHome()
 end
 
 
-function fn.printHome()
-	print_("Home",home.x,home.y,home.z,dirs[fn.todir(home.dir)])
-end

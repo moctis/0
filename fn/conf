@@ -17,3 +17,5 @@ conf.placeSlot=2
 conf.basey=11
 conf.keepFuel=16
 conf.safeTry = 0
+conf.gridZ = 2
+conf.gridX = 2

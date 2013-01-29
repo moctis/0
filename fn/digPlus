@@ -28,37 +28,34 @@ function fn.digX()
   for i=1,4 do
    fn.tryDig(5)
    if fn.isFull() then
-	fn.unloadAndReturn()
+	fn.digPlusUnload()
+	while fn.down() do end
    end
    fn.left()
   end   
 end
 
-function fn.unloadAndReturn()
+function fn.digPlusUnload()
  fn.loadHome()
  print_("jobUnload", home.x, home.y, home.z)
  fn.job("jobUnload", home.x, home.y, home.z)
  fn.gotoHome()
 
  local try=0
- while not turtle.detectUp() and fn.isFull() and try<60 do 
-   status("wait unload "..try.."/60")
-   sleep(1)
+ while true do
+   if turtle.detectUp() then break end
+   if try>30 then
+     if fn.isFull() then try=0 else break end
+   end
+   status("wait unload "..try.."/30")
+   sleep(1) 
    try=try+1
  end
 
- if turtle.detectUp() and fn.isFull() then
+ if turtle.detectUp() then
    fn.digPlusDrop(2, fn.safeDropUp, 2)
  end
- 
- while fn.down() do end
-end
 
-function fn.safeDropUp(x)
-  if turtle.detectUp() then
-    return turtle.dropUp(x)
-  end
-  return false
 end
 
 function fn.digPlus()
@@ -76,8 +73,8 @@ function fn.digPlusLoop()
    local x,y,z,dir=pos.x,pos.y,pos.z,''
    x,z=math.floor((x-1)/5),math.floor((z-1)/5)
  
-   z=fn.mod(z,8)
-   x=fn.mod(x,8)
+   z=fn.mod(z,conf.gridZ)
+   x=fn.mod(x,conf.gridX)
    if z==0 and x==0 then
      break
    end
@@ -111,24 +108,37 @@ end
 function fn.digPlusNext()
  fn.digPlusHome()
  local x,y,z,dir=pos.x,pos.y,pos.z,''
- x,z=math.floor((x-1)/5),math.floor((z-1)/5) 
- local ix,iz=fn.mod(x,8),fn.mod(z,2)
+ local ix,iz=math.floor((x-base.x-1)/5),math.floor((z-base.z-1)/5)  
+ local gx,gz=fn.mod(ix,conf.gridX),fn.mod(iz,conf.gridZ)
+ local px,pz=fn.mod(x-1,5),fn.mod(z-1,5)
+ local nx,nz = 9-px-pz, 10-pz*2
  local turn = false
- if iz==0 then 
-	if ix==3 then
-		fn.move('E', (4-x) + (5-z))
-		fn.move('S', (5-z)*2)
-		fn.move('W', (4-x) + (5-z))
+ print_("base ",base.x,base.z)
+ print_("x",x,"z",z)
+ print_("ix",ix,"iz",iz)
+ print_("gx",gx,"gz",gz)
+ print_("px",px,"pz",pz)
+ print_("nx",nx,"nz",nz)
+
+ if fn.mod(iz,2)==0 then 
+	if ix==conf.gridX-1 then
+		print_('move','E', nx)
+		print_('move','S', nz)
+		print_('move','W', nx)
+		fn.move('S',5)
 	else
+		print_('move','E',5)
 		fn.move('E',5)
 	end
  else 
 	if ix==0 then 
-		
+		print_('move','W',5)
+		fn.move('W',5)
 	else
-		fn.move('W', (4-x) + (5-z))
-		fn.move('S', (5-z)*2)
-		fn.move('E', (4-x) + (5-z))
+		fn.move('S',5)
+		print_('move','W', nx)
+		print_('move','S', nz)
+		print_('move','E', nx)
 	end
  end
 
@@ -157,7 +167,7 @@ function fn.digPlusDrop(start,act,try)
   end
   
   if count>0 then
-   print_("drop ",i," / ",count)
+   --print_("drop ",i," / ",count)
    if act(count) then c=0 end
   end
 
@@ -171,3 +181,4 @@ function fn.digPlusDrop(start,act,try)
   end
  end
 end
+

@@ -40,21 +40,16 @@ end
 
 function fn.dequeueJob(sender, ...)
   local job=fn.deQ("job")
-  if job==nil then job="" end
-  print("JOB:",job)
+  if job==nil then 
+    job="" 
+  else
+    print("JOB:",job)
+  end
+  
   fn.send(sender,job)  
 end
 
-
-
-function fn.unload(sender, x,y,z)
-  fn.goto(base.x,base.y-1,base.z)
-  fn.goto(base.x,base.y-1,pos.z) 
-  fn.goto(pos.x,base.y+1,pos.z)
-  fn.goto(x,base.y+1,z) 
-  conf=save
-end
-
+ 
 function fn.sleep(t)
   t=fn.tonumber(t,10)
   sleep(t)
@@ -74,7 +69,7 @@ function fn.jobUnload(x,y,z)
   end
   if turtle.detectDown() then
     count=0
-    while turtle.detectDown() and count < 50 do
+    while turtle.detectDown() and count < 20 do
       sleep(1)
       status("wait for unload "..count)
       count=count+1
@@ -82,5 +77,5 @@ function fn.jobUnload(x,y,z)
   end
   fn.gotoBase()
   fn.turn("N")
-  fn.digPlusDrop(2)
+  fn.digPlusDrop(2,fn.safeDrop,2)
 end

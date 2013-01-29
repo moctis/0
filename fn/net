@@ -32,7 +32,6 @@ function fn.init()
  fn.open()
  sleep(2)
  fn.locate()
- status(fn.where())
  fn.getDir()
- print(fn.where())
+ print_(fn.where())
 end

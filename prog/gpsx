@@ -15,12 +15,12 @@ function gpsx(cmd,x,y,z)
 		pos.x,pos.y,pos.z,pos.dir,pos.valid = 0,0,0,0,false
 		dropWay=false
 		for dir=0,3 do
-			print("setup "..dirs[pos.dir])
+			print("setup "..dirs[dir])
 			gx,gy,gz=xyz(dirs[dir])
 			gy=gy-1
 			fn.goto(gx,gy,gz,dir)
 			fn.tryDigUp()
-			turtle.select(dir)
+			turtle.select(5+dir)
 			if turtle.placeUp() then 
 				sleep(0.5)
 				fn.dropFuelUp()
@@ -28,7 +28,7 @@ function gpsx(cmd,x,y,z)
 				if m then m.turnOn() end
 			end
 			gx,gy,gz=xyz(nil, dirs[dir])
-			fn.goto(gx,gy,gz,baseid)
+			fn.goto(gx,gy,gz,dir)
 		end
 		fn.goto(0,0,0,0)
 		os.setComputerLabel("gpsx base "..x.." "..y.." ".. z)
@@ -74,7 +74,7 @@ end
 
 
 function gpsxServe(cmd)
-	local x,y,z
+	local x,y,z,t 
 	term.clear()
 	term.setCursorPos(20,1)
 	print("[Serving GPS]")
@@ -82,15 +82,21 @@ function gpsxServe(cmd)
 
 	local nServed = 0
 	while true do
-		sender,message,distance = rednet.receive(2)
+		local sender,message,distance = rednet.receive(2) 
 		if (message == "PING") or (message=="BASE") then
 			--print("pos.valid '",pos.valid, "', cmd '",cmd,"'")
 			--print(" msg '",message,"'"," sender ",sender)
 			if pos.valid then
 			if cmd=="base" and message=="BASE" then
-				rednet.send(sender, textutils.serialize({pos.x,pos.y,pos.z,cmd}))
-			else
-				rednet.send(sender, textutils.serialize({pos.x,pos.y,pos.z}))
+			        t={pos.x,pos.y,pos.z,cmd}
+			        t=textutils.serialize(t)
+				--print('a',t)
+				rednet.send(sender, t)
+			elseif message=="PING" then
+				t={pos.x,pos.y,pos.z}
+				t=textutils.serialize(t)
+				--print('b',t)
+				rednet.send(sender, t)
 			end
 			end
 			

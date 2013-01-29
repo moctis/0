@@ -79,25 +79,3 @@ function fn.digs()
  end
 end
 
-base={}
-function fn.getBase()
-	local m,d,loc = nil,0,nil
-	while m==nill do
-		status('locate base '..os.time())
-		sleep(math.random(1,5))
-		rednet.broadcast("BASE")
-		BaseID,m,d=rednet.receive(2) 
-		--print_(BaseID,m,d)
-		if m~= nil then
-			loc=textutils.unserialize(m)
-			if loc == nil then m=nil 
-			elseif loc[4] ~= "base" then m=nil end
-		end
-	end
-	base={}
-	base.x=loc[1]
-	base.y=loc[2]
-	base.z=loc[3]
-	base.id=BaseID
-	return b
-end

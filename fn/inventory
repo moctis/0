@@ -43,3 +43,25 @@ function fn.isFull()
   end
   return true
 end
+
+
+function fn.safeDropUp(x)
+  if turtle.detectUp() then
+    return turtle.dropUp(x)
+  end
+  return false
+end
+
+function fn.safeDrop(x)
+  if turtle.detect() then
+    return turtle.drop(x)
+  end
+  return false
+end
+
+function fn.safeDropDown(x)
+  if turtle.detectDown() then
+    return turtle.dropDown(x)
+  end
+  return false
+end
