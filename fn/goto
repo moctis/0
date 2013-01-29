@@ -1,21 +1,23 @@
 function fn.goto(x,y,z,dir)
- x,y,z,dir=tonumber(x),tonumber(y),tonumber(z),fn.todir(dir)
- print("goto "..x.." "..y.." "..z.." "..dirs[dir])
+ x,y,z=tonumber(x),tonumber(y),tonumber(z)
+ print_("goto",x,y,z,dirs[fn.todir(dir)])
  local i,c,tmp=0,0,false
  
  turtle.select(1)
  while pos.x~=x or pos.y~=y or pos.z~=z do
   fn.refuel(fn.distanct(x,y,z))
-  fn.setDigWay(false)
+
+  conf.moveUpDown = true
   fn.move('', pos.y-y, fn.tryDown)
-  fn.setDigWay(true)
+  conf.moveUpDown = false
+
   fn.move('N', pos.z-z) 
   fn.move('E', x-pos.x)
   fn.move('S', z-pos.z)
   fn.move('W', pos.x-x)
-  fn.setDigWay(false)
+  conf.moveUpDown = true
   fn.move('', y-pos.y, fn.tryUp)
-  fn.setDigWay(true)
+  conf.moveUpDown = false
  end
  fn.turn(dir)
 end
@@ -40,7 +42,7 @@ end
 function fn.digWay()
  if conf.digCeiling and turtle.detectUp() then  fn.tryDigUp() end
  if conf.digButtom and turtle.detectDown() then fn.tryDigDown() end
- if conf.dropWay and not turtle.detectDown() then 
+ if conf.dropWay and not conf.moveUpDown and not turtle.detectDown() then 
   fn.selectAdv(conf.placeSlot,1)
   turtle.placeDown()
   turtle.select(1)
@@ -51,7 +53,7 @@ function fn.move(dir, count, act)
  local i,c=0,0
  count=fn.tonumber(count,1)
  if act==nil then act=fn.tryForward end
- fn.turn(dir)
+ if count > 0 then fn.turn(dir) end
  while count>0 do
    if act(5) then 
 	fn.digWay()
@@ -60,4 +62,51 @@ function fn.move(dir, count, act)
      break
    end   
  end
+end
+
+function fn.gotoHome()
+	fn.loadHome()
+	fn.goto(home.x,home.y,home.z,home.dir) 
+end
+
+
+function fn.gotoBase()
+  local save=conf
+  conf.dropWay = false
+  conf.digCeiling = false
+  conf.digButtom=false
+
+  if pos.x~=base.x or pos.z~=base.z then
+    
+    if pos.z ~= base.z then
+      -- to base.Y
+      fn.goto(pos.x, base.y, pos.z)
+      fn.goto(base.x, base.y, pos.z)
+    end
+    fn.goto(base.x, base.y-2, pos.z)
+    fn.goto(base.x, base.y-2, base.z)
+  end
+  conf=save
+end
+
+function fn.gotoDigHome(x,y,z)
+  local save=conf
+  conf.dropWay = false
+  conf.digCeiling = false
+  conf.digButtom=false
+
+  if pos.z==base.z then
+    fn.goto(pos.x,base.y-2,pos.z)
+    fn.goto(base.x,base.y-2,base.z)
+    fn.goto(base.x,base.y-2,base.z+1)
+  end
+
+  if pos.y~=base.y then
+    fn.goto(pos.x,base.y,pos.z)
+  end
+
+  fn.goto(x,base.y,z)
+  fn.goto(x,y+1,z)
+ 
+  conf=save
 end

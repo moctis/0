@@ -21,6 +21,65 @@ function fn.jobQuit()
 	jobExit = true
 end
 
-function fn.sendJob(sender)
 
+function fn.job(...)
+  local cmd="ENQ "..fn.join({...})
+  fn.send(base.id,cmd)
+end
+
+function fn.getJob()
+  local cmd="DEQ"
+  fn.send(base.id,cmd)
+end
+
+
+function fn.queueJob(sender, ...)
+  local job=fn.join({...})
+  fn.enQ("job", job)
+end
+
+function fn.dequeueJob(sender, ...)
+  local job=fn.deQ("job")
+  if job==nil then job="" end
+  fn.send(sender,job)  
+end
+
+
+
+function fn.unload(sender, x,y,z)
+  fn.goto(base.x,base.y-1,base.z)
+  fn.goto(base.x,base.y-1,pos.z) 
+  fn.goto(pos.x,base.y+1,pos.z)
+  fn.goto(x,base.y+1,z) 
+  conf=save
+end
+
+function fn.sleep(t)
+  t=fn.tonumber(t,10)
+  sleep(t)
+end
+
+
+function fn.jobUnload(x,y,z)
+  print_("gotoDigHome",x,y,z)
+  fn.gotoDigHome(x,y,z)
+  turtle.select(1)
+  local count=0
+
+  while not turtle.detectDown() and count < 50 do 
+    sleep(1) 
+    status("wait for client ".. count)
+    count=count+1
+  end
+  if turtle.detectDown() then
+    count=0
+    while turtle.detectDown() and count < 50 do
+      sleep(1)
+      status("wait for unload "..count)
+      count=count+1
+    end
+  end
+  fn.gotoBase()
+  fn.turn("N")
+  fn.digPlusDrop(2)
 end

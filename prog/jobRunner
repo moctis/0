@@ -1,18 +1,21 @@
 fn.init()
 fn.getBase()
-fn.gotoHome()
+fn.gotoBase()
 while true do
  status("waiting...")
- local i,m,d=fn.recv()
- --print(i,m,d)
+ fn.getJob()
+ local i,m,d=fn.recv(5)
  if m then 
-  --print(i,"<",m)
   SID=i
   local t=lib.split(m)
-  if t[1] ~= nil and #t==1 then   
+  if m=="" then
+    sleep(10)
+  elseif t[1] ~= nil and #t==1 then   
    shell.run(t[1])
   elseif t[1] ~= nil and #t>=1 then   
    shell.run(t[1],unpack(t,2))
   end
+ else
+  sleep(10)
  end
 end

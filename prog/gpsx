@@ -1,7 +1,7 @@
 
 function gpsx(cmd,x,y,z)
 	local loc,baseid=nil,0
-	local gx,gy,gz
+	local gx,gy,gz,dir
 	if cmd=="base" then
 		while x==nill or y==nil or z==nil do
 		      x,y,z = gps.locate(2)
@@ -14,20 +14,20 @@ function gpsx(cmd,x,y,z)
 		x,y,z,dir = tonumber(x),tonumber(y),tonumber(z),0
 		pos.x,pos.y,pos.z,pos.dir,pos.valid = 0,0,0,0,false
 		dropWay=false
-		for baseid=0,3 do
+		for dir=0,3 do
 			print("setup "..dirs[pos.dir])
-			gx,gy,gz=xyz(dirs[baseid])
+			gx,gy,gz=xyz(dirs[dir])
 			gy=gy-1
-			fn.goto(gx,gy,gz,baseid)
+			fn.goto(gx,gy,gz,dir)
 			fn.tryDigUp()
-			turtle.select(5+baseid)
+			turtle.select(dir)
 			if turtle.placeUp() then 
 				sleep(0.5)
 				fn.dropFuelUp()
 				local m=peripheral.wrap("top")
 				if m then m.turnOn() end
 			end
-			gx,gy,gz=xyz(nil, dirs[baseid])
+			gx,gy,gz=xyz(nil, dirs[dir])
 			fn.goto(gx,gy,gz,baseid)
 		end
 		fn.goto(0,0,0,0)
@@ -40,21 +40,21 @@ function gpsx(cmd,x,y,z)
 		print("press ENTER to collect drone")
 		read()
 		fn.turn('N')
-		for baseid=0,3 do
+		for dir=0,3 do
 			turtle.select(1)
 			turtle.suck() 
 			turtle.select(9)
 			while turtle.suck() do sleep(0.5) end
-			turtle.select(5+baseid)
+			turtle.select(dir)
 			turtle.dropUp()
 			fn.dig()
 			fn.right()
 		end
 		return
 	elseif cmd=="N" or cmd=="E" or cmd=="S" or cmd=="W" then
-		loc = fn.base()
+		fn.getBase()
 		x,y,z=xyz(cmd)
-		pos.x,pos.y,pos.z,pos.dir,pos.valid=loc[1]+x,loc[2]+y,loc[3]+z,fn.todir(cmd),true
+		pos.x,pos.y,pos.z,pos.dir,pos.valid=base.x+x,base.y+y,base.z+z,fn.todir(cmd),true
 	else
 		print("invalid command")
 		return
@@ -99,13 +99,18 @@ function gpsxServe(cmd, loc)
 			term.setCursorPos(20,1)
 			print("[GPS Requests " ..nServed.."]")
 			term.setCursorPos(x,y)
-		elseif message=="JOB" and cmd=="base" then
-			fn.sendJob(sender)
 		elseif message=="DEL" and loc~=nil then
 			x,y,z=xyz(nil,cmd)
 			fn.refuel(30)
 			fn.goto(loc[1]+x,loc[2]+y,loc[3]+z,cmd) 
 			return
+		elseif cmd=="base" and message ~= nil then
+			local arg=fn.split(message)
+			if arg[1]=="ENQ" then
+				fn.queueJob(sender, unpack(arg,2))
+			elseif arg[1]=="DEQ" then
+				fn.dequeueJob(sender, unpack(arg,2))
+			end
 		end
 	end
 end

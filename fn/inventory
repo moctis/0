@@ -36,4 +36,10 @@ function fn.selectAdv(slot,keep)
 	return slot
 end
 
- 
+function fn.isFull()
+  local i
+  for i=1,16 do
+    if  turtle.getItemCount(i)==0 then return false end
+  end
+  return true
+end

@@ -1,0 +1,46 @@
+function fn.saveQ(file,data)
+	local f
+	if not fs.exists("/Q") then
+	  fs.makeDir("/Q")
+	end
+	f=io.open("/Q/"..file,"w")
+	f:write(fn.text(data))
+	f:close()
+end
+
+
+function fn.loadQ(file)
+	local f
+	if fs.exists("/Q/"..file) then 
+		f=io.open("/Q/"..file,"r")
+		local t=f:read("*a")
+		local data=fn.table(t)
+		if data==nil then data={} end
+		f:close()
+		return data
+	else
+		return {}
+	end
+end
+
+function fn.enQ(queue,data)
+	local Q = fn.loadQ(queue)
+	Q[#Q+1] = data
+	fn.saveQ(queue,Q)
+end
+
+function fn.deQ(queue)
+	local Q = fn.loadQ(queue)
+	local data=Q[1]
+	Q={unpack(Q,2)}
+	fn.saveQ(queue,Q)
+	return data
+end
+
+function fn.topQ(queue)
+	local Q = fn.loadQ(queue)
+	local data=Q[1]
+	return data
+end
+ 
+

@@ -26,10 +26,44 @@ end
 function fn.digX()
   for i=1,4 do
    fn.tryDig(5)
+   if fn.isFull() then
+	fn.unloadAndReturn()
+   end
    fn.left()
   end   
 end
 
+
+
+function fn.unloadAndReturn()
+ fn.job("jobUnload", home.x, home.y, home.z)
+ fn.gotoHome()
+ 
+
+ while not turtle.detectUp() and fn.isFull() do 
+   status("wait unload "..os.time())
+   sleep(1)
+ end
+
+ if turtle.detectUp() and fn.isFull() then
+   fn.digPlusDrop(2, fn.safeDropUp)	   
+ end
+ 
+ while fn.down() do end
+end
+
+function fn.safeDropUp()
+  if turtle.detectUp() then
+    return turtle.dropUp()
+  end
+  return false
+end
+
+function fn.digPlus()
+ fn.digPlusHome()
+ fn.digPlusRun()
+ fn.digPlusNext()
+end
 
 function fn.digPlusLoop()
  while true do
@@ -39,8 +73,8 @@ function fn.digPlusLoop()
    local x,y,z,dir=pos.x,pos.y,pos.z,''
    x,z=math.floor((x-1)/5),math.floor((z-1)/5)
  
-   z=fn.mod(z,4)
-   x=fn.mod(x,4)
+   z=fn.mod(z,8)
+   x=fn.mod(x,8)
    if z==0 and x==0 then
      break
    end
@@ -51,7 +85,7 @@ end
 function fn.digPlusBase()
  local x,y,z=pos.x,pos.y,pos.z
  x=x-fn.mod(x-1,5)+2
- y=conf.basey
+ y=base.y-2
  fn.goto(x,y,z,'N')
 end
 
@@ -64,9 +98,10 @@ function fn.digPlusHome()
  local x,y,z=pos.x,pos.y,pos.z
  x=x-fn.mod(x-1,5)
  x=x+dx[fn.mod(z-1,5)]
- y=conf.basey
+ y=base.y-2
  status(x,' ',y,' ',z,' E')
  fn.goto(x,y,z,'E')
+ fn.saveHome()
 end
 
 function fn.digPlusNext()
@@ -75,7 +110,7 @@ function fn.digPlusNext()
  x,z=math.floor((x-1)/5),math.floor((z-1)/5)
  
  z=fn.mod(z,2)
- x=fn.mod(x,4)
+ x=fn.mod(x,8)
  if z==0 then 
 	dir='E' 
 	if x==3 then dir='S' end

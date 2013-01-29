@@ -13,18 +13,18 @@ end
 function fn.recv(t)
  local i,m,d = rednet.receive(t)
  if i then 
-  if m~='PING' and echo_recv then print(i.."> " .. m) end
+  if m~='PING' and echo_recv then print(i.."> " , m) end
  end
  return i,m,d
 end
 
 function fn.broadcast(o)
- if echo_recv then print("<<"..o) end
+ if echo_recv then print("<<",o) end
  rednet.broadcast(o)
 end
 
-function fn.send(id, o)
-  if echo_recv then print("< "..o) end
+function fn.send(id, o)  
+  if echo_recv then print("< ",o) end
   rednet.send(id, o)
 end
 

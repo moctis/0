@@ -1,15 +1,19 @@
 digBlocks=true
 maxDrone = 0 
-echo_recv = true
+echo_recv = false
 dropFuel=16
 ver=3
 BaseID=nil
 
-
+home={}
 conf={}
+base={}
+Q={}
 conf.dropWay=true
 conf.digCeiling=true
 conf.digButtom=false
+conf.moveUpDown=false
 conf.placeSlot=2
 conf.basey=11
 conf.keepFuel=16
+conf.safeTry = 0

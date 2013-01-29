@@ -14,3 +14,4 @@ function fn.all(...)
  end
  return ans
 end
+ 

@@ -42,7 +42,7 @@ function fn.getDir()
     elseif pos.oz<pos.z then pos.dir=2
     elseif pos.ox<pos.x then pos.dir=1
     elseif pos.ox>pos.x then pos.dir=3 end
-    turtle.back()
+    while not turtle.back() do end
     fn.locate()
     while c>=4 do c=c-4 end
     for i=1,c do fn.left() end
@@ -53,3 +53,27 @@ function fn.getDir()
   turtle.turnRight()
  end
 end
+
+function fn.saveHome()
+	home=pos
+	local t = fn.join({home.x,home.y,home.z,home.dir})
+	f=io.open("/home","w")
+	f:write(t)
+	f:close()
+end
+
+function fn.loadHome()
+	if fs.exists("/home") then 
+		f=io.open("/home","r")
+		local t=f:read("*a")
+		local tt=fn.split(t)
+		home=pos
+		home.x=tt[1]
+		home.y=tt[2]
+		home.z=tt[3]
+		f:close()
+	else
+		home=pos
+	end
+end
+

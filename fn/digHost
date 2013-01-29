@@ -79,7 +79,8 @@ function fn.digs()
  end
 end
 
-function fn.base()
+base={}
+function fn.getBase()
 	local m,d,loc = nil,0,nil
 	while m==nill do
 		status('locate base '..os.time())
@@ -93,5 +94,10 @@ function fn.base()
 			elseif loc[4] ~= "base" then m=nil end
 		end
 	end
-	return loc
+	base={}
+	base.x=loc[1]
+	base.y=loc[2]
+	base.z=loc[3]
+	base.id=BaseID
+	return b
 end
