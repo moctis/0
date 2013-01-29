@@ -55,8 +55,8 @@ function fn.getDir()
 end
 
 function fn.saveHome()
-	home=pos
-	local t = fn.join({home.x,home.y,home.z,home.dir})
+	home.x,home.y,home.z,home.dir =pos.x,pos.y,pos.z,pos.dir
+	local t = fn.join({home.x,home.y,home.z,dirs[home.dir]})
 	f=io.open("/home","w")
 	f:write(t)
 	f:close()
@@ -67,13 +67,18 @@ function fn.loadHome()
 		f=io.open("/home","r")
 		local t=f:read("*a")
 		local tt=fn.split(t)
-		home=pos
-		home.x=tt[1]
-		home.y=tt[2]
-		home.z=tt[3]
+		home={}
+		home.x=fn.tonumber(tt[1],pos.x)
+		home.y=fn.tonumber(tt[2],pos.y)
+		home.z=fn.tonumber(tt[3],pos.z)
+		home.dir=fn.todir(tt[4])
 		f:close()
 	else
 		home=pos
 	end
 end
 
+
+function fn.printHome()
+	print_("Home",home.x,home.y,home.z,dirs[fn.todir(home.dir)])
+end

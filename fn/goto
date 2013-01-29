@@ -16,7 +16,7 @@ function fn.goto(x,y,z,dir)
   fn.move('S', z-pos.z)
   fn.move('W', pos.x-x)
   conf.moveUpDown = true
-  fn.move('', y-pos.y, fn.tryUp)
+  fn.move(pos.dir, y-pos.y, fn.tryUp)
   conf.moveUpDown = false
  end
  fn.turn(dir)
@@ -66,6 +66,7 @@ end
 
 function fn.gotoHome()
 	fn.loadHome()
+	print_("goto Home ",home.x,home.y,home.z,home.dir) 
 	fn.goto(home.x,home.y,home.z,home.dir) 
 end
 
@@ -90,10 +91,7 @@ function fn.gotoBase()
 end
 
 function fn.gotoDigHome(x,y,z)
-  local save=conf
-  conf.dropWay = false
-  conf.digCeiling = false
-  conf.digButtom=false
+  local gx,gy,gz = fn.tonumber(x,pos.x),fn.tonumber(y,pos.y),fn.tonumber(z,pos.z)
 
   if pos.z==base.z then
     fn.goto(pos.x,base.y-2,pos.z)
@@ -101,12 +99,22 @@ function fn.gotoDigHome(x,y,z)
     fn.goto(base.x,base.y-2,base.z+1)
   end
 
+  if pos.z~=gz then
+    fn.goto(pos.x,base.y-2,gz)
+  end
+
   if pos.y~=base.y then
     fn.goto(pos.x,base.y,pos.z)
   end
 
-  fn.goto(x,base.y,z)
-  fn.goto(x,y+1,z)
+
+  local save=fn.clone(conf)
+  conf.dropWay = false
+  conf.digCeiling = false
+  conf.digButtom=false
+
+  fn.goto(gx,base.y,gz)
+  fn.goto(gx,gy+1,gz)
  
-  conf=save
+  conf=fn.clone(save)
 end

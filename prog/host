@@ -1,4 +1,6 @@
 fn.init()
+fn.getBase()
+fn.gotoHome()
 --print('wait all drone start')
 --sleep(5)
 --fn.digRegister()

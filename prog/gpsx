@@ -73,7 +73,7 @@ end
 
 
 
-function gpsxServe(cmd, loc)
+function gpsxServe(cmd)
 	local x,y,z
 	term.clear()
 	term.setCursorPos(20,1)
@@ -99,10 +99,10 @@ function gpsxServe(cmd, loc)
 			term.setCursorPos(20,1)
 			print("[GPS Requests " ..nServed.."]")
 			term.setCursorPos(x,y)
-		elseif message=="DEL" and loc~=nil then
+		elseif message=="DEL" then
 			x,y,z=xyz(nil,cmd)
 			fn.refuel(30)
-			fn.goto(loc[1]+x,loc[2]+y,loc[3]+z,cmd) 
+			fn.goto(base.x+x,base.y+y,base.z+z,cmd) 
 			return
 		elseif cmd=="base" and message ~= nil then
 			local arg=fn.split(message)

@@ -41,6 +41,7 @@ end
 function fn.dequeueJob(sender, ...)
   local job=fn.deQ("job")
   if job==nil then job="" end
+  print("JOB:",job)
   fn.send(sender,job)  
 end
 

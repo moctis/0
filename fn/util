@@ -64,3 +64,7 @@ end
 function fn.pp(a,b)
  return a,b
 end 
+
+function fn.clone(x)
+ return fn.table(fn.text(x))
+end
