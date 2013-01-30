@@ -64,57 +64,43 @@ function fn.move(dir, count, act)
  end
 end
 
+-- if count < 0 then move oposit direction
+function fn.move2(dir,count,act)
+  if count < 0 then 
+    dir=fn.todir(dir)
+    if dir=='N' then dir='S'
+    elseif dir=='S' then dir='N'
+    elseif dir=='W' then dir='E'
+    elseif dir=='E' then dir='W' end  
+    count=-count
+  end
+  return fn.move2(dir,count,act)
+end
+
 function fn.gotoHome()
-	fn.loadHome()
-	print_("goto Home ",home.x,home.y,home.z,home.dir) 
-	fn.goto(home.x,home.y,home.z,home.dir) 
+  fn.loadHome()
+  print_("goto Home ",home.x,home.y,home.z,home.dir) 
+  fn.goto(home.x,home.y,home.z,home.dir) 
 end
 
 
 function fn.gotoBase()
-  local save=conf
-  conf.dropWay = false
-  conf.digCeiling = false
-  conf.digButtom=false
+  local x,y,z = base.x,conf.basey,base.z
+  local mx, mz = pos.x-fn.mod(pos.x+2,5)+2, pos.z-fn.mod(pos.z+2,5)+2
 
-  if pos.x~=base.x or pos.z~=base.z then
-    
-    if pos.z ~= base.z then
-      -- to base.Y
-      fn.goto(pos.x, base.y, pos.z)
-      fn.goto(base.x, base.y, pos.z)
-    end
-    fn.goto(base.x, base.y-2, pos.z)
-    fn.goto(base.x, base.y-2, base.z)
-  end
-  conf=save
+  fn.goto(pos.x, y, pos.z) -- to base.y
+  fn.goto(mx, y, mz) -- to mx,mz
+  fn.goto(mx, y, z) -- to base z
+  fn.goto(x,y,z) -- to base x
 end
 
 function fn.gotoDigHome(x,y,z)
-  local gx,gy,gz = fn.tonumber(x,pos.x),fn.tonumber(y,pos.y),fn.tonumber(z,pos.z)
+  x,y,z = fn.tonumber(x,pos.x),fn.tonumber(y,pos.y),fn.tonumber(z,pos.z)
+  local mx, mz = x-fn.mod(x+2,5)+2, z-fn.mod(z+2,5)+2
 
-  if pos.z==base.z then
-    fn.goto(pos.x,base.y-2,pos.z)
-    fn.goto(base.x,base.y-2,base.z)
-    fn.goto(base.x,base.y-2,base.z+1)
-  end
-
-  if pos.z~=gz then
-    fn.goto(pos.x,base.y-2,gz)
-  end
-
-  if pos.y~=base.y then
-    fn.goto(pos.x,base.y,pos.z)
-  end
-
-
-  local save=fn.clone(conf)
-  conf.dropWay = false
-  conf.digCeiling = false
-  conf.digButtom=false
-
-  fn.goto(gx,base.y,gz)
-  fn.goto(gx,gy+1,gz)
- 
-  conf=fn.clone(save)
+  fn.goto(pos.x, conf.basey, pos.z) -- to base.y
+  fn.goto(mx, conf.basey, pos.z) -- to mx
+  fn.goto(mx, conf.basey, mz) -- to mz
+  fn.goto(x, conf.basey, z) -- to x,z
+  fn.goto(x, y+1, z) -- to y
 end

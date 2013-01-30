@@ -1,5 +1,6 @@
 fn.init()
 fn.getBase()
+conf.basey = base.y - 4
 fn.gotoHome()
 while true do
  status("waiting...")

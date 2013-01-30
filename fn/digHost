@@ -2,80 +2,78 @@ function fn.digHello(id)
  fn.send(tonumber(id),"IAm "..os.getComputerID())
 end
 
-function fn.digRegister()
+function fn.register()
+ drones={}
  local ans = fn.all('digHello',os.getComputerID())
  local k,v
  maxDrone = 0
- for k,v in pairs(ans) do
-  maxDrone = maxDrone +1
- end
- print('register count = ', maxDrone)
+ for k,v in pairs(ans) do 
+  if drones[k]==nil then
+    maxDrone = maxDrone +1
+  end
+  drones[k]=true  
+ end 
+ fn.showRegister()
 end
 
+function fn.showRegister()
+  for k,v in pairs(drones) do
+    print(k)
+  end
+  print('count = ', maxDrone)
+end
 
-function fn.digWait()
+function fn.digWait(txt)
  local k,v,c,tmp=0,0,0,echo_recv
  echo_recv = false
+ if txt==nil then txt="wait" end
+
  while true do
   sleep(5)
-  local ans = fn.all('digHello '..os.getComputerID())
-  c = 0
-  for k,v in pairs(ans) do
-   c = c+1
+
+  for k,v in pairs(drones) do
+    drones[k] = false
   end
+
+  local ans = fn.all('digHello '..os.getComputerID())
+  
+  for k,v in pairs(ans) do
+    drones[k]=true
+  end
+
+  c = 0
+  for k,v in pairs(drones) do
+    if drones[k]==true then
+      c=c+1
+    end
+  end
+  status(txt.."  "..c.."/"..maxDrone)
   if c == maxDrone then
    echo_recv = tmp
    return
   end  
  end
 end
-
-function fn.digBase()
- fn.all('digPlusBase')
- fn.digPlusBase()
- fn.digWait()
-end
-
-function fn.digHome()
- fn.all('digPlusHome')
- fn.digWait()
-end
-
+ 
 function fn.digRun()
  fn.all('digPlusRun')
- fn.digWait()
+ fn.digWait('digPlusRun')
 end
 
-function fn.digNext()
- fn.all('digPlusNext')
- fn.go(5,0,0,'N')
- fn.digWait()
+function fn.digs(n)
+ n = fn.tonumber(n,1)
+ digsCount = digsCount + n
 end
-
-function fn.digDropAll()
- return fn.digDrop(true)
-end
-
-function fn.digDrop(all)
- fn.tryDigUp()
- turtle.select(conf.placeSlot)
- turtle.placeUp()
- if all == nil then
-  fn.all('digPlusDrop')
- else
-  fn.all('digPlusDropAll')
- end
- fn.digPlusDrop(4, turtle.dropUp)
- fn.digWait()
-end
-
-function fn.digs()
+  
+function fn.digsRunner()
  while true do
- fn.digBase()
- fn.digHome()
- fn.digRun()
- fn.digNext()
- fn.digDrop()
+   if digsCount > 0 then
+     status("digs remain#",digsCount)
+     fn.all('digPlus')
+     fn.digWait('digPlus')
+     digsCount=digsCount-1
+   else
+     sleep(5)
+   end   
  end
 end
-

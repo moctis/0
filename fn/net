@@ -24,6 +24,7 @@ function fn.broadcast(o)
 end
 
 function fn.send(id, o)  
+  id=fn.tonumber(id)
   if echo_recv then print("< ",o) end
   rednet.send(id, o)
 end

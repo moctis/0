@@ -1,11 +1,16 @@
+conf.dropWay = false
+conf.digCeiling = false
+conf.digButtom=false
+
 fn.init()
 fn.getBase()
+conf.basey = base.y - 2
 fn.gotoBase()
 while true do
  status("waiting...")
  fn.getJob()
  local i,m,d=fn.recv(5)
- if m then 
+ if m and i==base.id then 
   SID=i
   local t=lib.split(m)
   if m=="" then

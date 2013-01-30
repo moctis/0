@@ -14,13 +14,18 @@ function fn.digPlusRun()
   fn.tryUp()
  end
 
- fn.selectAdv(conf.placeSlot, 5)
- for i=1,4 do  
-  turtle.place()
-  fn.left()
+ fn.calcPos()
+ if pos.px==2 and pos.pz==2 then
+   fn.selectAdv(conf.placeSlot, 5)
+   for i=1,4 do  
+    turtle.place()
+    fn.left()
+   end
+   fn.tryUp()
+   turtle.placeDown() 
+ else
+   fn.tryUp()
  end
- fn.tryUp()
- turtle.placeDown() 
 end
 
 
@@ -54,14 +59,17 @@ function fn.digPlusUnload()
 
  if turtle.detectUp() then
    fn.digPlusDrop(2, fn.safeDropUp, 2)
+   fn.tryDown()
+   fn.tryUp()
  end
-
+ 
 end
 
 function fn.digPlus()
  fn.digPlusHome()
  fn.digPlusRun()
  fn.digPlusNext()
+ fn.digPlusHome()
 end
 
 function fn.digPlusLoop()
@@ -69,24 +77,16 @@ function fn.digPlusLoop()
    fn.digPlusHome()
    fn.digPlusRun()
    fn.digPlusNext()
-
-   local x,y,z,dir=pos.x,pos.y,pos.z,''
-   x,z=math.floor((x-1)/5),math.floor((z-1)/5)
- 
-   z=fn.mod(z,conf.gridZ)
-   x=fn.mod(x,conf.gridX)
-   if z==0 and x==0 then
-     break
-   end
  end
 
 end
 
 function fn.digPlusBase()
- local x,y,z=pos.x,pos.y,pos.z
- x=x-fn.mod(x-1,5)+2
- y=base.y-2
- fn.goto(x,y,z,'N')
+ fn.calcPos()
+ local x,y,z,dir=pos.x,conf.basey,pos.z,'N'
+ x = x - pos.px + 2
+ if pos.pz < 2 then dir='S' end
+ fn.goto(x,y,z, dir)
 end
 
 function fn.mod(x,d)
@@ -96,53 +96,69 @@ end
 
 function fn.digPlusHome()
  local dx={[0]=1,[1]=4,[2]=2,[3]=0,[4]=3}
- local x,y,z=pos.x,pos.y,pos.z
- x=x-fn.mod(x-1,5)
- x=x+dx[fn.mod(z-1,5)]
- y=base.y-2
- status(x,' ',y,' ',z,' E')
- fn.goto(x,y,z,'E')
+ local x,y,z,dir=0,0,0,''
+ fn.calcPos()
+
+ x = pos.x + dx[pos.pz] - pos.px
+ y = conf.basey
+ z = pos.z
+ dir = fn.nextDir(pos.ix,pos.iz)
+
+ conf.dropWay = false
+ if (pos.pz==0) then conf.dropWay=true end
+ if (pos.pz==4) then conf.dropWay=true end
+ fn.goto(x,y,z,dir)
  fn.saveHome()
+end
+
+function fn.printNext()
+ local x,y
+ local t
+ for y=-5,5 do
+   t=""
+   for x=-5,5 do
+     t=t..fn.nextDir(x,y)
+   end
+   print(t)
+ end
+end
+
+
+function fn.testNext()
+  local h,k,dir = pos.x,pos.z,''
+  for i=1,30 do
+    turtle.placeDown()
+    dir=fn.nextDir(pos.x-h,pos.z-k)
+    fn.move(dir,1)
+  end
+end
+
+--[[
+        |
+  E E E E E E S
+  N E E E E S S
+  N N E E S S S
+--N N N S S S S--
+  N N N W S S S
+  N N W W W S S
+  N W W W W W S
+        |
+]]
+function fn.nextDir(ix,iz)
+ local dir=" "
+ if ix>=-iz and ix>=iz then return 'S' 
+ elseif ix<iz and ix>-iz then return 'W'
+ elseif ix<=-iz and ix<iz then return 'N'
+ else return 'E'
+ end
 end
 
 function fn.digPlusNext()
  fn.digPlusHome()
- local x,y,z,dir=pos.x,pos.y,pos.z,''
- local ix,iz=math.floor((x-base.x-1)/5),math.floor((z-base.z-1)/5)  
- local gx,gz=fn.mod(ix,conf.gridX),fn.mod(iz,conf.gridZ)
- local px,pz=fn.mod(x-1,5),fn.mod(z-1,5)
- local nx,nz = 9-px-pz, 10-pz*2
- local turn = false
- print_("base ",base.x,base.z)
- print_("x",x,"z",z)
- print_("ix",ix,"iz",iz)
- print_("gx",gx,"gz",gz)
- print_("px",px,"pz",pz)
- print_("nx",nx,"nz",nz)
-
- if fn.mod(iz,2)==0 then 
-	if ix==conf.gridX-1 then
-		print_('move','E', nx)
-		print_('move','S', nz)
-		print_('move','W', nx)
-		fn.move('S',5)
-	else
-		print_('move','E',5)
-		fn.move('E',5)
-	end
- else 
-	if ix==0 then 
-		print_('move','W',5)
-		fn.move('W',5)
-	else
-		fn.move('S',5)
-		print_('move','W', nx)
-		print_('move','S', nz)
-		print_('move','E', nx)
-	end
- end
-
- fn.digPlusHome()
+ fn.calcPos()
+ local dir = fn.nextDir(pos.ix,pos.iz)
+ fn.move(dir, 5)
+ fn.digPlusHome() 
 end
 
 function fn.digPlusDropAll()
@@ -161,7 +177,7 @@ function fn.digPlusDrop(start,act,try)
   count=turtle.getItemCount(i)
   if i==1 then 
     count=count-conf.keepFuel
-  elseif i==start then count=count-1 
+  elseif i==start then count = count - conf.keepPlace 
   elseif i<start then
     count=0
   end
@@ -176,6 +192,7 @@ function fn.digPlusDrop(start,act,try)
     i,c = 1,c+1
     if c>try then 
       status('digPlusDrop done')
+      turtle.select(1)
       return 
     end
   end

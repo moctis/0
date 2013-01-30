@@ -76,6 +76,9 @@ function fn.jobUnload(x,y,z)
     end
   end
   fn.gotoBase()
-  fn.turn("N")
-  fn.digPlusDrop(2,fn.safeDrop,2)
+  if not turtle.detectDown() then
+    turtle.select(conf.placeSlot)
+    turtle.placeDown()
+  end
+  fn.digPlusDrop(2,fn.safeDropDown,2)
 end

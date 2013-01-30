@@ -45,7 +45,7 @@ function gpsx(cmd,x,y,z)
 			turtle.suck() 
 			turtle.select(9)
 			while turtle.suck() do sleep(0.5) end
-			turtle.select(dir)
+			turtle.select(5+dir)
 			turtle.dropUp()
 			fn.dig()
 			fn.right()
@@ -66,6 +66,9 @@ function gpsx(cmd,x,y,z)
 		end,
 		function()
 			fn.jobCommander()
+		end,
+		function()
+			fn.digsRunner()
 		end
 	)
 	

@@ -33,6 +33,20 @@ function fn.where(loc)
 	return "POS",pos.x,pos.y,pos.z,dirs[pos.dir]
  end
 end
+
+function fn.calcPos()
+ local x,y,z,dir=pos.x,pos.y,pos.z,''
+ -- big pos
+ pos.ix,pos.iz=math.floor((x-base.x+2)/5),math.floor((z-base.z+2)/5)  
+ -- big pos mod grid
+ pos.gx,pos.gz=fn.mod(pos.ix,conf.gridX),fn.mod(pos.iz,conf.gridZ)
+ -- in cell
+ pos.px,pos.pz=fn.mod(pos.x+2,5),fn.mod(pos.z+2,5)
+
+ print_("i ", pos.ix, pos.iz)
+ print_("g ", pos.gx, pos.gz)
+ print_("p ", pos.px,pos.pz)
+end
  
 
 function fn.getDir()
