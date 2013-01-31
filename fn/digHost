@@ -11,7 +11,7 @@ function fn.register()
   if drones[k]==nil then
     maxDrone = maxDrone +1
   end
-  drones[k]=true  
+  drones[k]="register"  
  end 
  fn.showRegister()
 end
@@ -30,20 +30,19 @@ function fn.digWait(txt)
 
  while true do
   sleep(5)
-
   for k,v in pairs(drones) do
-    drones[k] = false
+    drones[k] = "wait"
   end
 
   local ans = fn.all('digHello '..os.getComputerID())
   
   for k,v in pairs(ans) do
-    drones[k]=true
+    drones[k]="done"
   end
 
   c = 0
   for k,v in pairs(drones) do
-    if drones[k]==true then
+    if drones[k]=="done" then
       c=c+1
     end
   end
@@ -69,11 +68,42 @@ function fn.digsRunner()
  while true do
    if digsCount > 0 then
      status("digs remain#",digsCount)
+ 
+     for k,v in pairs(drones) do
+       drones[k]="wait"
+     end
+
      fn.all('digPlus')
-     fn.digWait('digPlus')
+     
+     while true do
+	local c = 0
+        for k,v in pairs(drones) do
+          if drones[k]=="done" then
+            c=c+1
+          end
+        end
+	status("digs remain#",digsCount,"  done ",c,"/",maxDrone," ",os.time())
+	if c==maxDrone then break end
+	sleep(5)
+     end
      digsCount=digsCount-1
    else
+     status("digs done")
      sleep(5)
    end   
  end
+end
+
+function fn.digDone(id)
+ id=fn.tonumber(id,0)
+ id="com"..id
+ if drones[id] then
+   drones[id]='done'
+ end
+end
+
+function fn.droneStatus()
+  for k,v in pairs(drones) do
+    print_(k,v)
+  end
 end

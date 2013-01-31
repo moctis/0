@@ -15,7 +15,7 @@ function fn.digPlusRun()
  end
 
  fn.calcPos()
- if pos.px==2 and pos.pz==2 then
+ if conf.dropWay then
    fn.selectAdv(conf.placeSlot, 5)
    for i=1,4 do  
     turtle.place()
@@ -31,11 +31,11 @@ end
 
 function fn.digX()
   for i=1,4 do
-   fn.tryDig(5)
    if fn.isFull() then
 	fn.digPlusUnload()
 	while fn.down() do end
    end
+   fn.tryDig(5)
    fn.left()
   end   
 end
@@ -70,8 +70,13 @@ function fn.digPlus()
  fn.digPlusRun()
  fn.digPlusNext()
  fn.digPlusHome()
+ fn.digPlusDone()
 end
 
+
+function fn.digPlusDone()
+  fn.send(base.id,"DONE")
+end
 function fn.digPlusLoop()
  while true do
    fn.digPlusHome()

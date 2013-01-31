@@ -119,6 +119,8 @@ function gpsxServe(cmd)
 				fn.queueJob(sender, unpack(arg,2))
 			elseif arg[1]=="DEQ" then
 				fn.dequeueJob(sender, unpack(arg,2))
+			elseif arg[1]=="DONE" then
+				fn.digDone(sender)
 			end
 		end
 	end
