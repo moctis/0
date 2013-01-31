@@ -78,7 +78,7 @@ end
 
 function fn.getBase()
 	local m,d,loc = nil,0,nil
-	while m==nill do
+	while m==nil do
 		status('locate base '..os.time())
 		sleep(math.random(1,5))
 		rednet.broadcast("BASE")

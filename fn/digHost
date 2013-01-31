@@ -87,8 +87,9 @@ function fn.digsRunner()
 	sleep(5)
      end
      digsCount=digsCount-1
+     if (digsCount == 0) then status("digs done") end
    else
-     status("digs done")
+     
      sleep(5)
    end   
  end

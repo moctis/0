@@ -18,6 +18,6 @@ if #t>0 then
   s=s..t[n]..' '
  end
  os.setComputerLabel(s)
-else
+elseif os.getComputerLabel() == nil then
  os.setComputerLabel('drone')
 end
