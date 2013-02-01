@@ -2,7 +2,7 @@ digBlocks=true
 maxDrone = 0 
 echo_recv = false
 dropFuel=16
-ver=3
+ver=5
 BaseID=nil
 digsCount = 0
 
