@@ -46,7 +46,7 @@ function fn.dequeueJob(sender, ...)
     print("JOB:",job)
   end
   
-  fn.send(sender,job)  
+  fn.send(sender,"call "..job)  
 end
 
  
@@ -81,4 +81,13 @@ function fn.jobUnload(x,y,z)
     turtle.placeDown()
   end
   fn.digPlusDrop(2,fn.safeDropDown,2)
+
+  fn.jobUnloadHome(x,y,z)
+  gotoHome()
+end
+
+function fn.jobUnloadHome(x,y,z)
+  local mx, mz = x-fn.mod(x+2,5)+2, z-fn.mod(z+2,5)+2
+  fn.gotoDigHome(mx,conf.basey-1,mz)  
+  saveHome()
 end

@@ -61,7 +61,7 @@ end
 
 function fn.digs(n)
  n = fn.tonumber(n,1)
- digsCount = digsCount + n
+ digsCount = n
 end
   
 function fn.digsRunner()

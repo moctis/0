@@ -13,14 +13,14 @@ while true do
  if m and i==base.id then 
   SID=i
   local t=lib.split(m)
-  if m=="" then
-    sleep(10)
+  if m=="" or t[1] ~='call' then
+    sleep(5)
   elseif t[1] ~= nil and #t==1 then   
    shell.run(t[1])
   elseif t[1] ~= nil and #t>=1 then   
    shell.run(t[1],unpack(t,2))
   end
  else
-  sleep(10)
+  sleep(5)
  end
 end

@@ -40,7 +40,8 @@ function fn.digX()
   end   
 end
 
-function fn.digPlusUnload()
+function fn.digPlusUnload(unloadAll)
+ unloadAll = fn.tobool(unloadAll,false)
  fn.loadHome()
  print_("jobUnload", home.x, home.y, home.z)
  fn.job("jobUnload", home.x, home.y, home.z)
@@ -50,7 +51,7 @@ function fn.digPlusUnload()
  while true do
    if turtle.detectUp() then break end
    if try>30 then
-     if fn.isFull() then try=0 else break end
+     if fn.isFull() and not unloadAll then try=0 else break end
    end
    status("wait unload "..try.."/30")
    sleep(1) 
@@ -59,10 +60,15 @@ function fn.digPlusUnload()
 
  if turtle.detectUp() then
    fn.digPlusDrop(2, fn.safeDropUp, 2)
+   local x = turtle.detectDown()
    fn.tryDown()
    fn.tryUp()
+   if x then
+      fn.selectAdv(conf.placeSlot, 5)
+      turtle.placeDown() 
+   end
  end
- 
+ turtle.select(1)
 end
 
 function fn.digPlus()
@@ -109,9 +115,9 @@ function fn.digPlusHome()
  z = pos.z
  dir = fn.nextDir(pos.ix,pos.iz)
 
- conf.dropWay = false
- if (pos.pz==0) then conf.dropWay=true end
- if (pos.pz==4) then conf.dropWay=true end
+ --conf.dropWay = false
+ --if (pos.pz==0) then conf.dropWay=true end
+ --if (pos.pz==4) then conf.dropWay=true end
  fn.goto(x,y,z,dir)
  fn.saveHome()
 end
@@ -163,7 +169,12 @@ function fn.digPlusNext()
  fn.calcPos()
  local dir = fn.nextDir(pos.ix,pos.iz)
  fn.move(dir, 5)
- fn.digPlusHome() 
+ fn.digPlusHome()
+
+ if (pos.px==2) and (pos.py==2) then
+   fn.job("jobUnloadHome", home.x, home.y, home.z)
+ end
+
 end
 
 function fn.digPlusDropAll()
