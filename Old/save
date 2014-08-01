@@ -13,3 +13,5 @@ save('prog')
 save('fn')
 save('fn')
 save('api')
+
+Test('')
